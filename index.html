@@ -1,0 +1,1514 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ibo摩托英文学习站</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto}
+
+  body{
+    background: url(bg.jpg) no-repeat center top fixed;
+    background-size: cover;
+    background-color: #121212;
+    color:#fff;
+    /* 👇 手机安全底部间距，防止被导航条挡住 */
+    padding-bottom: env(safe-area-inset-bottom, 80px);
+    position: relative;
+    min-height: 100dvh;
+    height: auto;
+  }
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:rgba(18,18,18,0.75);
+    z-index:-1;
+  }
+
+  .page{
+    background:rgba(30,30,30,0.2);
+    /* 👇 这行是修复手机太短的关键 */
+    min-height: 100dvh;
+    height: auto;
+    padding-bottom:70px;
+    display:none;
+    opacity:0;
+    transition: opacity 0.3s ease;
+  }
+  .page.active{
+    display:block;
+    opacity:1;
+  }
+
+  .header{
+    padding:10px 16px;
+    display:flex;align-items:center;gap:10px;
+    background:transparent;
+    position:relative;
+  }
+  .logo{
+    width:40px;height:40px;border-radius:50%;object-fit:cover;
+  }
+  .logo-text{
+    font-size:18px;font-weight:bold;color:#66cc66;
+  }
+
+  .search-box{padding:10px 16px;background:transparent !important;}
+  .search-input{
+    width:100%;padding:10px 14px;border-radius:24px;
+    border:1px solid rgba(34, 197, 94, 0.4);
+    outline:none;font-size:14px;
+    background:rgba(50,50,50,0.6);
+    color:#fff;
+    transition: all 0.2s;
+  }
+  .search-input:focus{
+    background:rgba(60,60,60,0.8);
+    border-color: rgba(34,197,94,0.8);
+  }
+  .search-input::placeholder{color:#ccc;}
+
+  .nav{
+    display:flex;gap:8px;padding:10px 16px 5px;
+    background:transparent !important;
+    overflow-x:auto;white-space:nowrap;
+  }
+  .nav-item{
+    padding:6px 12px;background:rgba(70,70,70,0.9);
+    border-radius:20px;
+    font-size:13px;flex-shrink:0;cursor:pointer;
+    color:#fff;
+    transition: all 0.2s;
+  }
+  .nav-item.active{background:rgba(34, 197, 94, 0.9);color:#fff;}
+  .nav-item:hover{background:rgba(80,80,80,1);}
+  .nav-item.active:hover{background:rgba(34,197,94,1);}
+
+  .swiper{
+    display:flex;gap:10px;overflow-x:auto;
+    scroll-snap-type:x mandatory;scroll-behavior:smooth;
+    scrollbar-width: none;-ms-overflow-style: none;
+    margin-top:5px;
+    padding:0 16px;
+  }
+  .swiper::-webkit-scrollbar {display: none;}
+  .banner-card{
+    width:85%;aspect-ratio:16/9;border-radius:14px;
+    flex-shrink:0;scroll-snap-align:start;position:relative;overflow:hidden;cursor:pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+  .banner-img{width:100%;height:100%;object-fit:cover;}
+  .banner-text{
+    position:absolute;bottom:16px;left:16px;color:#fff;
+    font-size:18px;font-weight:bold;text-shadow:0 1px 4px rgba(0,0,0,0.7);
+  }
+
+  .section-title{padding:14px 16px 8px;font-size:16px;font-weight:bold;color:#66cc66}
+
+  .video-player-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: 10px;
+    padding:0 16px;
+  }
+  .video-box{
+    width:100%;
+    /* 👇 手机标准视频比例，不会变形 */
+    aspect-ratio: 16 / 9;
+    background:#000;
+    border-radius:12px;
+    overflow:hidden;
+    position:relative;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  }
+  video{
+    width:100%;
+    display:block;
+  }
+
+  .subtitle-switch-btn{
+    position:absolute;
+    right:12px;
+    bottom:12px;
+    padding:5px 12px;
+    background:rgba(34,197,94,0.9);
+    color:#fff;
+    border:none;
+    border-radius:6px;
+    font-size:13px;
+    z-index:15;
+    cursor:pointer;
+  }
+
+  .video-play-btn{
+    position:absolute;
+    top:50%; left:50%;
+    transform:translate(-50%,-50%);
+    width:70px; height:70px;
+    border-radius:50%;
+    background:rgba(255,255,255,0.25);
+    display:grid; place-items:center;
+    color:#fff; font-size:28px;
+    cursor:pointer; z-index:10;
+    transition: opacity 0.3s;
+  }
+  .video-box.playing .video-play-btn {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .subtitle-container{
+    width: 100%;
+    /* 👇 手机自适应高度，不会太短也不会太长 */
+    max-height: 42vh;
+    height: auto;
+    min-height: 180px;
+    overflow: auto;
+    background: transparent;
+    padding: 10px 0;
+    transition: all 0.3s ease;
+  }
+  .subtitle-container.hide-sub {
+    height: 0 !important;
+    padding: 0 !important;
+    opacity: 0 !important;
+  }
+  .subtitle-list{
+    transition: transform 0.3s ease;
+  }
+  .subtitle-item {
+    position: relative;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    background: rgba(50,50,50,0.95);
+    border-radius: 8px;
+    line-height: 1.8;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    opacity: 1;
+    cursor: pointer;
+    color:#fff;
+  }
+  .subtitle-item.active {
+    background: rgb(47, 47, 47) !important;
+    border: 1px solid rgba(34, 197, 94, 0.6);
+  }
+  .subtitle-item.played {
+    opacity: 0;
+    height: 0;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    border: none;
+  }
+  .star-fav {
+    position: absolute;
+    top: 12px;
+    right: 10px;
+    font-size: 18px;
+    color: #9c9c9c;
+    cursor: pointer;
+    background: none;
+    border: none;
+  }
+  .star-fav.active {
+    color: #ffc107;
+  }
+  .sub-en {
+    font-weight: 500;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+  .sub-zh {
+    color: #eee;
+    font-size: 15px;
+  }
+
+  .word-cet4 {
+    display: inline-block;
+    background: rgba(34, 197, 94, 0.35);
+    padding: 1px 4px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-weight: 500;
+    margin: 0 1px;
+    color:#fff;
+  }
+  .word-cet6 {
+    display: inline-block;
+    background: rgba(255, 221, 119, 0.35);
+    padding: 1px 4px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-weight: 500;
+    margin: 0 1px;
+    color:#fff;
+  }
+  .word-ielts {
+    display: inline-block;
+    background: rgba(190, 140, 255, 0.35);
+    padding: 1px 4px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-weight: 500;
+    margin: 0 1px;
+    color:#fff;
+  }
+
+  .word-popup {
+    position: fixed;
+    background: #2a2a2a;
+    border: 1px solid #555;
+    border-radius: 8px;
+    padding: 10px 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+    z-index: 999;
+    min-width: 220px;
+    display: none;
+    color:#fff;
+  }
+  .word-popup p {
+    margin: 4px 0;
+    font-size: 14px;
+    line-height: 1.4;
+    color:#fff;
+  }
+  .word-popup .word-text {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 6px;
+    color: #66cc66;
+  }
+  .word-fav {
+    margin-top: 6px;
+    padding: 5px 8px;
+    background: #66cc66;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+  }
+
+  .tabbar{
+    position:fixed;bottom:0;left:0;right:0;
+    background:rgba(20,20,20,0.98);
+    border-top:1px solid rgba(34, 197, 94, 0.3);
+    height:50px;
+    /* 👇 手机底部安全距离，iPhone 不会被小白条挡住 */
+    padding-bottom: env(safe-area-inset-bottom);
+    display:flex;z-index:99;
+    box-sizing: border-box;
+  }
+  .tab{flex:1;display:grid;place-items:center;font-size:12px;cursor:pointer;color:#ddd;}
+  .tab.active{color:#66cc66;}
+
+  .secondary-header{
+    position:relative;padding:14px 16px;
+    background:transparent;
+  }
+  .secondary-title{
+    font-size:19px;font-weight:bold;color:#66cc66;
+  }
+  .header-back-btn{
+    position:absolute;right:16px;top:14px;width:36px;height:36px;border-radius:50%;
+    background:rgba(255,255,255,0.25);
+    display:grid;place-items:center;cursor:pointer;z-index:2;
+  }
+  .header-back-btn svg{
+    width:18px;height:18px;fill:#fff;
+  }
+
+  @media (max-width: 380px) {
+    .video-grid{
+      grid-template-columns: 1fr;
+    }
+  }
+  .video-item{
+    display:flex;flex-direction:column;gap:6px;
+  }
+  .video-card{
+    aspect-ratio:16/9;border-radius:12px;overflow:hidden;position:relative;cursor:pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  }
+  .video-card-img{width:100%;height:100%;object-fit:cover;}
+  .video-card-play{
+    position:absolute;inset:0;display:grid;place-items:center;background:rgba(255,255,255,0.15);
+  }
+  .video-card-play svg{
+    width:36px;height:36px;fill:#fff;
+  }
+  .video-del-btn{
+    position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:50%;
+    background:rgba(255,59,48,0.95);color:#fff;font-size:12px;
+    display:grid;place-items:center;cursor:pointer;z-index:5;
+  }
+  .video-name{
+    padding:4px 0;font-size:14px;color:#fff;
+    outline:none;background:transparent;border:none;
+    width:100%;text-align:left;
+  }
+
+  .add-video-form{
+    margin:12px 16px 20px;padding:12px;
+    background:rgba(50,50,50,0.95);
+    border-radius:12px;
+    border:1px solid rgba(34,197,94,0.25);
+  }
+  .add-video-form input{
+    width:100%;padding:8px 10px;margin-bottom:8px;border-radius:8px;
+    border:1px solid rgba(34,197,94,0.3);outline:none;font-size:13px;
+    background:#333;color:#fff;
+  }
+  .add-video-btn{
+    width:100%;padding:9px;background:#66cc66;
+    color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:14px;
+  }
+
+  .oil-tab{
+    display:flex;gap:10px;padding:10px 16px;background:transparent;
+  }
+  .oil-item{
+    flex:1;padding:8px;text-align:center;border-radius:10px;
+    background:#444;cursor:pointer;color:#fff;
+  }
+  .oil-item.active{background:#66cc66;color:#fff;}
+
+  .ibo-card{
+    margin:20px 16px;padding:20px;
+    background:transparent !important;
+    text-align:center;
+  }
+  .ibo-avatar{
+    width:120px;height:120px;border-radius:50%;object-fit:cover;
+    margin-bottom:12px;
+    cursor:pointer;
+    border:2px solid rgba(34, 197, 94,0.4);
+  }
+  .ibo-name{
+    font-size:22px;font-weight:bold;color:#66cc66;
+    background:transparent !important;
+    border:none;outline:none;text-align:center;
+    width:100%;
+  }
+  .avatar-input{display:none;}
+
+  .modal-overlay {
+    position: fixed; top:0; left:0; right:0; bottom:0;
+    background: rgba(0,0,0,0.7); z-index:99; display:none;
+  }
+  .word-modal {
+    position: fixed; left:50%; top:50%; transform:translate(-50%,-50%);
+    background:#2a2a2a; padding:20px; border-radius:12px; z-index:100;
+    width:80%; max-width:320px; display:none;color:#fff;
+    border:1px solid #555;
+  }
+  .modal-title { font-size:18px; font-weight:bold; color:#66cc66; margin-bottom:6px; }
+  .modal-phonetic { color:#ffdd77; margin-bottom:6px; }
+  .modal-meaning { margin-bottom:10px;color:#fff; }
+  .modal-close {
+    margin-top:12px; padding:8px; background:#66cc66; color:#fff;
+    text-align:center; border-radius:8px; cursor:pointer;
+  }
+
+  /* 单词卡片美化 */
+  .word-card {
+    background: rgba(45,45,45,0.9);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 0 16px 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    cursor: pointer;
+  }
+  .word-card-cet6 {
+    border-left-color: #ffdd77;
+  }
+  .word-card-word {
+    font-size: 18px;
+    font-weight: bold;
+    color: #66cc66;
+    margin-bottom: 6px;
+  }
+  .word-card-phonetic {
+    color: #ffdd77;
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+  .word-card-pos {
+    display: inline-block;
+    background: rgba(34,197,94,0.2);
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+  .word-card-meaning {
+    font-size: 15px;
+    color: #eee;
+    line-height: 1.5;
+  }
+
+  /* 生词本卡片（超级美化） */
+  .word-book-item {
+    background: rgba(50,50,50,0.95);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 0 16px 12px;
+    border: 1px solid rgba(34,197,94,0.3);
+  }
+  .wb-word {
+    font-size: 19px;
+    font-weight: bold;
+    color: #66cc66;
+    margin-bottom: 6px;
+  }
+  .wb-phonetic {
+    color: #ffdd77;
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+  .wb-pos {
+    display: inline-block;
+    background: rgba(34,197,94,0.2);
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-size: 12px;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .wb-meaning {
+    font-size: 15px;
+    color: #fff;
+    margin-bottom: 10px;
+    line-height: 1.5;
+  }
+  .wb-sentences {
+    background: rgba(30,30,30,0.5);
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 10px;
+    font-size: 13px;
+    color: #ccc;
+    line-height: 1.5;
+  }
+  .wb-sentences-title {
+    color: #66cc66;
+    font-size: 13px;
+    margin-bottom: 6px;
+    font-weight: bold;
+  }
+  .wb-sentence-item {
+    padding: 4px 0;
+    border-bottom: 1px dashed rgba(255,255,255,0.1);
+    cursor: pointer;
+  }
+  .wb-sentence-item:hover {
+    color: #66cc66;
+  }
+  .unfav-btn {
+    background: #ff9800;
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+
+  /* 字幕收藏 */
+  .practice-item {
+    background: rgba(50,50,50,0.95);
+    padding: 14px;
+    border-radius: 10px;
+    margin: 0 16px 10px;
+    color: #fff;
+    line-height: 1.6;
+  }
+
+  .below-banner {
+    width: calc(100% - 32px);
+    margin: 0 auto 16px;
+    border-radius:14px;
+    overflow:hidden;
+    aspect-ratio:16/4;
+  }
+  .below-banner img {
+    width:100%;
+    height:100%;
+    object-fit:cover;
+  }
+
+  .word-stat {
+    text-align: center;
+    color: #66cc66;
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+
+  /* 语音条列表 */
+  .voice-list {
+    padding: 0 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 10px;
+  }
+
+  /* 一条语音 */
+  .voice-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* 头像 */
+  .voice-avatar {
+    width: 46px;
+    height: 46px;
+    border-radius: 6px;
+    object-fit: cover;
+  }
+
+  /* 绿色语音条 */
+  .voice-bar {
+    background-color: #66cc66;
+    color: #000;
+    padding: 10px 14px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-width: 150px;
+    cursor: pointer;
+  }
+
+  /* 语音名称 */
+  .voice-text {
+    position: absolute;
+    bottom: 12px;
+    left: 16px; /* 靠左 */
+    z-index: 2;
+  }
+
+  .voice-wave-gif {
+    height: 22px; /* 大小刚好 */
+    width: auto;
+    display: none; /* 播放时才显示 */
+  }
+
+  /* 时长 */
+  .voice-time {
+    font-size: 13px;
+    opacity: 0.8;
+  }
+
+  /* 隐藏音频 */
+  .voice-src {
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="modal-overlay" id="modalOverlay"></div>
+<div class="word-modal" id="wordModal">
+  <div class="modal-title" id="modalWord">word</div>
+  <div class="modal-phonetic" id="modalPhonetic">/wɜːd/</div>
+  <div class="modal-meaning" id="modalMeaning">n. 单词；话语</div>
+  <div style="display:flex;justify-content:space-between;color:#fff">
+    <div id="modalPos">n.</div>
+    <div class="modal-star" id="modalStar">⭐</div>
+  </div>
+  <div class="modal-close" onclick="closeWordModal()">关闭</div>
+</div>
+
+<div class="word-popup" id="wordPopup"></div>
+
+<!-- 首页 -->
+<div id="mainPage" class="page active">
+  <div class="header">
+    <img src="logo.jpg" class="logo">
+    <div class="logo-text">ibo摩托英文学习站</div>
+  </div>
+
+  <div class="search-box">
+    <input class="search-input" type="text" placeholder="Wang Yibo 酷盖">
+  </div>
+
+  <div class="nav">
+    <div class="nav-item active" onclick="showPage('mainPage')">Yibo语音</div>
+    <div class="nav-item" onclick="showPage('dramaPage')">追剧学习</div>
+    <div class="nav-item" onclick="showPage('chinaGtPage')">CHINA GT</div>
+    <div class="nav-item" onclick="showPage('oilPage')">四六级词汇</div>
+    <div class="nav-item" onclick="showPage('bbcPage')">Yibo news</div>
+  </div>
+
+  <div class="swiper" id="bannerSwiper">
+    <div class="banner-card" onclick="showPage('dramaPage')">
+      <img src="banner2.jpg" class="banner-img">
+      <div class="banner-text">探索心境</div>
+    </div>
+    <div class="banner-card" onclick="showPage('chinaGtPage')">
+      <img src="banner3.jpg" class="banner-img">
+      <div class="banner-text">China GT</div>
+    </div>
+    <div class="banner-card" onclick="showPage('bbcPage')">
+      <img src="banner4.jpg" class="banner-img">
+      <div class="banner-text">Yibo news</div>
+    </div>
+  </div>
+
+  <!-- 保留Yibo热点标题 -->
+  <div class="section-title" id="mainTitle">Yibo语音</div>
+
+  <!-- 语音条列表 -->
+  <div class="voice-list" id="voiceList">
+
+    <!-- 第一条语音 -->
+    <div class="voice-item">
+      <img class="voice-avatar" src="logo.jpg">
+      <div class="voice-bar" onclick="playThisVoice(this)">
+        <div class="voice-text">
+          <img class="voice-wave-gif" src="voice-wave.gif" alt="播放中">
+        </div>
+        <div class="voice-time">00:10</div>
+      </div>
+      <audio class="voice-src" src="voice1.mp3"></audio>
+    </div>
+
+  </div>
+
+  <!-- 添加语音条按钮 -->
+  <div style="padding:10px 16px">
+    <input type="text" id="voiceName" placeholder="语音名称：Yibo语音" style="width:100%;padding:8px;margin-bottom:5px;border-radius:8px;background:#333;color:#fff;border:0">
+    <input type="text" id="voiceTime" placeholder="时长：00:15" style="width:100%;padding:8px;margin-bottom:5px;border-radius:8px;background:#333;color:#fff;border:0">
+    <input type="text" id="voiceFile" placeholder="音频：voice1.mp3" style="width:100%;padding:8px;margin-bottom:5px;border-radius:8px;background:#333;color:#fff;border:0">
+    <button onclick="addVoiceBar()" style="width:100%;background:#66cc66;color:#fff;padding:8px;border-radius:8px;border:0">添加语音条</button>
+  </div>
+</div>
+
+<!-- 追剧学习 -->
+<div id="dramaPage" class="page">
+  <div class="secondary-header">
+    <div class="secondary-title">探索心境</div>
+    <div class="header-back-btn" onclick="showPage('mainPage')">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6 1.4 1.4-4.6 4.6 4.6 4.6z"/></svg>
+    </div>
+  </div>
+  <div class="search-box">
+    <input class="search-input" placeholder="搜索视频">
+  </div>
+  <div class="add-video-form">
+    <input type="text" id="imgName" placeholder="缩略图：exploring1_1.jpg">
+    <input type="text" id="videoName" placeholder="视频：exploring1_1.mp4">
+    <input type="text" id="videoTitle" placeholder="视频名称">
+    <button class="add-video-btn" onclick="addNewVideoCard()">一键新增视频</button>
+  </div>
+  <div class="video-grid" id="mindVideoList">
+    <div class="video-item">
+      <div class="video-card" onclick="openVideo('exploring1_1.mp4')">
+        <div class="video-del-btn" onclick="deleteVideo(event,this)">×</div>
+        <img src="exploring1_1.jpg" class="video-card-img">
+        <div class="video-card-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+      </div>
+      <input class="video-name" type="text" value="视频 1">
+    </div>
+    <div class="video-item">
+      <div class="video-card" onclick="openVideo('exploring1_2.mp4')">
+        <div class="video-del-btn" onclick="deleteVideo(event,this)">×</div>
+        <img src="exploring1_2.jpg" class="video-card-img">
+        <div class="video-card-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+      </div>
+      <input class="video-name" type="text" value="视频 2">
+    </div>
+  </div>
+</div>
+
+<!-- China GT -->
+<div id="chinaGtPage" class="page">
+  <div class="secondary-header">
+    <div class="secondary-title">China GT</div>
+    <div class="header-back-btn" onclick="showPage('mainPage')">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6 1.4 1.4-4.6 4.6 4.6 4.6z"/></svg></div>
+  </div>
+  <div class="search-box">
+    <input class="search-input" placeholder="搜索视频">
+  </div>
+  <div class="add-video-form">
+    <input type="text" id="imgNameGt" placeholder="缩略图：gt1_1.jpg">
+    <input type="text" id="videoNameGt" placeholder="视频：gt1_1.mp4">
+    <input type="text" id="videoTitleGt" placeholder="视频名称">
+    <button class="add-video-btn" onclick="addNewVideoCardGT()">一键新增视频</button>
+  </div>
+  <div class="video-grid" id="gtVideoList">
+  </div>
+</div>
+
+<!-- 视频播放 -->
+<div id="videoPage" class="page">
+  <div class="secondary-header">
+    <div class="secondary-title">视频播放</div>
+    <div class="header-back-btn" onclick="stopVideoAndBack()">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6 1.4 1.4-4.6 4.6 4.6 4.6z"/></svg></div>
+  </div>
+
+  <div class="video-player-wrapper">
+    <div class="video-box" id="videoBox">
+      <video id="videoPlayer" playsinline controls></video>
+      <div class="video-play-btn" id="playBtn" onclick="togglePlayPause()">▶</div>
+      <button class="subtitle-switch-btn" id="subtitleSwitchBtn" onclick="toggleSubtitleShow()">隐藏字幕</button>
+    </div>
+
+    <div class="subtitle-container" id="subtitleContainer">
+      <div id="subtitleList" class="subtitle-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 加油站 -->
+<div id="oilPage" class="page">
+  <div class="secondary-header">
+    <div class="secondary-title">加油站</div>
+    <div class="header-back-btn" onclick="showPage('mainPage')">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6 1.4 1.4-4.6 4.6 4.6 4.6z"/></svg></div>
+  </div>
+  <div class="oil-tab">
+    <div class="oil-item" onclick="showPage('cet4Page')">四级单词</div>
+    <div class="oil-item" onclick="showPage('cet6Page')">六级单词</div>
+    <div class="oil-item" onclick="showPage('wordbookPage')">生词本</div>
+    <div class="oil-item" onclick="showPage('practicePage')">字幕收藏</div>
+  </div>
+
+  <div class="word-stat" id="wordCountInfo">
+    加载中...
+  </div>
+</div>
+
+<!-- 四级单词 -->
+<div id="cet4Page" class="page">
+  <div class="secondary-header">
+    <div class="secondary-title">四级单词</div>
+    <div class="header-back-btn" onclick="showPage('oilPage')">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6 1.4 1.4-4.6 4.6 4.6 4.6z"/></svg></div>
+  </div>
+
+  <!-- 新增搜索框 -->
+  <div class="search-box" style="padding:10px 16px;">
+    <input class="search-input" id="cet4Search" type="text" placeholder="搜索四级单词" oninput="filterCet4Words()">
+  </div>
+
+  <div class="section-title"></div>
+  <div id="cet4WordList"></div>
+</div>
+
+<!-- 六级单词 -->
+<div id="cet6Page" class="page">
+  <div class="secondary-header">
+    <div class="secondary-title">六级单词</div>
+    <div class="header-back-btn" onclick="showPage('oilPage')">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6 1.4 1.4-4.6 4.6 4.6 4.6z"/></svg></div>
+  </div>
+
+  <!-- 搜索框 和 四级同款 -->
+  <div class="search-box" style="padding:10px 16px;">
+    <input class="search-input" id="cet6Search" type="text" placeholder="搜索六级单词" oninput="filterCet6Words()">
+  </div>
+
+  <div class="section-title"></div>
+  <div id="cet6WordList"></div>
+</div>
+
+<!-- 生词本 -->
+<div id="wordbookPage" class="page">
+  <div class="secondary-header">
+    <div class="secondary-title">生词本</div>
+    <div class="header-back-btn" onclick="showPage('oilPage')">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6 1.4 1.4-4.6 4.6 4.6 4.6z"/></svg></div>
+  </div>
+  <div style="text-align:center;padding:16px;color:#fff;">我收藏的单词</div>
+  <div id="collectedList"></div>
+</div>
+
+<!-- 字幕收藏 -->
+<div id="practicePage" class="page">
+  <div class="secondary-header">
+    <div class="secondary-title">字幕收藏</div>
+    <div class="header-back-btn" onclick="showPage('oilPage')">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6 1.4 1.4-4.6 4.6 4.6 4.6z"/></svg></div>
+  </div>
+  <div style="text-align:center;padding:16px;color:#fff;">我收藏的字幕句子</div>
+  <div id="practiceList"></div>
+</div>
+
+<!-- ibo -->
+<div id="iboPage" class="page">
+  <div class="secondary-header">
+    <div class="secondary-title">ibo</div>
+    <div class="header-back-btn" onclick="showPage('mainPage')">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6 1.4 1.4-4.6 4.6 4.6 4.6z"/></svg></div>
+  </div>
+  <div class="ibo-card">
+    <img src="logo.jpg" class="ibo-avatar" id="avatarPreview" onclick="document.getElementById('avatarInput').click()">
+    <input type="file" id="avatarInput" class="avatarInput" accept="image/*">
+    <input type="text" class="ibo-name" value="Wang Yibo" id="iboName">
+    <div style="margin-top:8px;font-size:12px;color:#ccc">点击头像可更换 | 点击名字可修改</div>
+  </div>
+</div>
+
+<!-- BBC -->
+<div id="bbcPage" class="page">
+  <div class="secondary-header">
+    <div class="secondary-title">BBC NEWS</div>
+    <div class="header-back-btn" onclick="showPage('mainPage')">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6 1.4 1.4-4.6 4.6 4.6 4.6z"/></svg></div>
+  </div>
+  <div style="padding:20px;color:#fff;text-align:center">即将上线</div>
+</div>
+
+<div class="tabbar">
+  <div class="tab active" onclick="showPage('mainPage')">首页</div>
+  <div class="tab" onclick="showPage('oilPage')">加油站</div>
+  <div class="tab" onclick="showPage('iboPage')">ibo</div>
+</div>
+
+<script>
+const video = document.getElementById("videoPlayer");
+const subtitleList = document.getElementById("subtitleList");
+const subtitleContainer = document.getElementById("subtitleContainer");
+const subtitleSwitchBtn = document.getElementById("subtitleSwitchBtn");
+const wordPopup = document.getElementById("wordPopup");
+const modalOverlay = document.getElementById("modalOverlay");
+
+let currentSubIndex = -1;
+let subtitles = [];
+let subVisible = true;
+let wordLibrary = {};
+let cet4Words = {}, cet6Words = {};
+
+// 全局：缓存所有视频的字幕（永久保存）
+let allSubtitlesCache = JSON.parse(localStorage.getItem('allSubtitlesCache') || '[]');
+
+// 加载词库 + 自动统计数量
+async function loadWordLibrary() {
+  try {
+    cet4Words = await fetch("cet4.json").then(r => r.json());
+    cet6Words = await fetch("cet6.json").then(r => r.json());
+    let ielts = await fetch("ielts.json").then(r => r.json());
+
+    let allWords = {};
+    for (let w in cet4Words) allWords[w] = { ...cet4Words[w], type: "cet4" };
+    for (let w in cet6Words) allWords[w] = { ...cet6Words[w], type: "cet6" };
+    for (let w in ielts) allWords[w] = { ...ielts[w], type: "ielts" };
+    wordLibrary = allWords;
+
+    renderCet4List();
+    renderCet6List();
+
+    document.getElementById("wordCountInfo").innerText =
+      `CET4 已收录 ${Object.keys(cet4Words).length} 个单词 | CET6 已收录 ${Object.keys(cet6Words).length} 个单词`;
+
+    console.log("✅ 词库加载完成");
+  } catch (err) {
+    console.log("❌ 词库加载失败");
+  }
+}
+
+// 全局保存排序后的四级单词
+let sortedCet4 = [];
+
+function renderCet4List() {
+  const list = document.getElementById("cet4WordList");
+  sortedCet4 = Object.keys(cet4Words).sort((a, b) => a.localeCompare(b));
+  
+  let html = "";
+  for (let w of sortedCet4) {
+    const d = cet4Words[w];
+    html += `
+    <div class="word-card" onclick="showWordInfo('${w}','${d.phonetic}','${d.meaning}','${d.pos}')">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <span style="font-weight:bold;color:#66cc66;">${w}</span>
+        <!-- 音标已改为橙色 #ff9500 -->
+        <span style="color:#ff9500;">${d.phonetic || ''}</span>
+        <span style="background:rgba(34,197,94,0.2);padding:2px 6px;border-radius:10px;font-size:12px;">${d.pos || ''}</span>
+        <span style="color:#eee;flex:1;margin-left:4px;">${d.meaning || ''}</span>
+      </div>
+    </div>`;
+  }
+  list.innerHTML = html;
+}
+
+function filterCet4Words() {
+  const keyword = document.getElementById("cet4Search").value.toLowerCase().trim();
+  const list = document.getElementById("cet4WordList");
+  
+  let html = "";
+  for (let w of sortedCet4) {
+    if (w.toLowerCase().includes(keyword) || cet4Words[w].meaning.includes(keyword)) {
+      const d = cet4Words[w];
+      html += `
+      <div class="word-card" onclick="showWordInfo('${w}','${d.phonetic}','${d.meaning}','${d.pos}')">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <span style="font-weight:bold;color:#66cc66;">${w}</span>
+          <span style="color:#ff9500;">${d.phonetic || ''}</span>
+          <span style="background:rgba(34,197,94,0.2);padding:2px 6px;border-radius:10px;font-size:12px;">${d.pos || ''}</span>
+          <span style="color:#eee;flex:1;margin-left:4px;">${d.meaning || ''}</span>
+        </div>
+      </div>`;
+    }
+  }
+  list.innerHTML = html;
+}
+
+// 四级单词搜索过滤
+function filterCet4Words() {
+  const keyword = document.getElementById("cet4Search").value.toLowerCase().trim();
+  const list = document.getElementById("cet4WordList");
+  
+  let html = "";
+  for (let w of sortedCet4) {
+    if (w.toLowerCase().includes(keyword) || cet4Words[w].meaning.includes(keyword)) {
+      const d = cet4Words[w];
+      html += `
+      <div class="word-card" onclick="showWordInfo('${w}','${d.phonetic}','${d.meaning}','${d.pos}')">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <span style="font-weight:bold;color:#66cc66;">${w}</span>
+          <span style="color:#ffdd77;">${d.phonetic || ''}</span>
+          <span style="background:rgba(34,197,94,0.2);padding:2px 6px;border-radius:10px;font-size:12px;">${d.pos || ''}</span>
+          <span style="color:#eee;flex:1;margin-left:4px;">${d.meaning || ''}</span>
+        </div>
+      </div>`;
+    }
+  }
+  list.innerHTML = html;
+}
+
+// 全局保存排序后的六级单词
+let sortedCet6 = [];
+
+// 渲染六级单词（A-Z排序 + 同行布局 和四级同款）
+function renderCet6List() {
+  const list = document.getElementById("cet6WordList");
+  
+  // A-Z 排序
+  sortedCet6 = Object.keys(cet6Words).sort((a, b) => a.localeCompare(b));
+  
+  let html = "";
+  for (let w of sortedCet6) {
+    const d = cet6Words[w];
+    html += `
+    <div class="word-card word-card-cet6" onclick="showWordInfo('${w}','${d.phonetic}','${d.meaning}','${d.pos}')">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <span style="font-weight:bold;color:#66cc66;">${w}</span>
+        <span style="color:#ff9500;">${d.phonetic || ''}</span>
+        <span style="background:rgba(34,197,94,0.2);padding:2px 6px;border-radius:10px;font-size:12px;">${d.pos || ''}</span>
+        <span style="color:#eee;flex:1;margin-left:4px;">${d.meaning || ''}</span>
+      </div>
+    </div>`;
+  }
+  list.innerHTML = html;
+}
+
+// 六级单词搜索过滤 和四级同款
+function filterCet6Words() {
+  const keyword = document.getElementById("cet6Search").value.toLowerCase().trim();
+  const list = document.getElementById("cet6WordList");
+  
+  let html = "";
+  for (let w of sortedCet6) {
+    if (w.toLowerCase().includes(keyword) || cet6Words[w].meaning.includes(keyword)) {
+      const d = cet6Words[w];
+      html += `
+      <div class="word-card word-card-cet6" onclick="showWordInfo('${w}','${d.phonetic}','${d.meaning}','${d.pos}')">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <span style="font-weight:bold;color:#66cc66;">${w}</span>
+          <span style="color:#ff9500;">${d.phonetic || ''}</span>
+          <span style="background:rgba(34,197,94,0.2);padding:2px 6px;border-radius:10px;font-size:12px;">${d.pos || ''}</span>
+          <span style="color:#eee;flex:1;margin-left:4px;">${d.meaning || ''}</span>
+        </div>
+      </div>`;
+    }
+  }
+  list.innerHTML = html;
+}
+
+function toggleSubtitleShow() {
+  subVisible = !subVisible;
+  if (subVisible) {
+    subtitleContainer.classList.remove('hide-sub');
+    subtitleSwitchBtn.innerText = "隐藏字幕";
+  } else {
+    subtitleContainer.classList.add('hide-sub');
+    subtitleSwitchBtn.innerText = "显示字幕";
+  }
+}
+
+// 本地存储
+function getCollectedWords() {
+  return JSON.parse(localStorage.getItem('collectedWords') || '[]');
+}
+function setCollectedWords(arr) {
+  localStorage.setItem('collectedWords', JSON.stringify(arr));
+}
+function getPracticeSentences() {
+  return JSON.parse(localStorage.getItem('practice') || '[]');
+}
+function setPracticeSentences(arr) {
+  localStorage.setItem('practice', JSON.stringify(arr));
+}
+
+// 收藏单词
+function collectWord(word) {
+  const info = wordLibrary[word] || {};
+  const list = getCollectedWords();
+  const exists = list.some(item => item.word === word);
+  if (!exists) {
+    list.push({
+      word: word,
+      phonetic: info.phonetic || '',
+      meaning: info.meaning || '',
+      pos: info.pos || ''
+    });
+    setCollectedWords(list);
+    renderWordBook();
+  }
+}
+
+// 取消收藏
+function removeCollectedWord(word) {
+  let list = getCollectedWords();
+  list = list.filter(item => item.word !== word);
+  setCollectedWords(list);
+  renderWordBook();
+}
+
+// 收藏句子
+function collectSentence(text) {
+  const list = getPracticeSentences();
+  const exists = list.some(item => item.text === text);
+  if (!exists) {
+    list.push({ text: text });
+    setPracticeSentences(list);
+    renderPractice();
+  }
+}
+function removeSentence(text) {
+  let list = getPracticeSentences();
+  list = list.filter(item => item.text !== text);
+  setPracticeSentences(list);
+  renderPractice();
+}
+
+// 渲染生词本（自动从全站字幕提取句子）
+function renderWordBook() {
+  const list = getCollectedWords();
+  const el = document.getElementById('collectedList');
+
+  el.innerHTML = list.map(item => {
+    const word = item.word;
+    // 从全站所有缓存字幕中匹配
+    const matched = allSubtitlesCache.filter(sub =>
+      new RegExp(`\\b${word}\\b`, 'i').test(sub.en)
+    );
+
+    const senHtml = matched.length
+      ? `<div class="wb-sentences">
+           <div class="wb-sentences-title">🔗 全站字幕中出现的句子（点击跳转）</div>
+           ${matched.map((sub, i) => `
+             <div class="wb-sentence-item" onclick="openVideo('${sub.videoSrc}',${sub.time})">
+               ${i + 1}. ${sub.en}｜${sub.zh}
+             </div>
+           `).join('')}
+         </div>`
+      : '<div class="wb-sentences">暂无匹配句子</div>';
+
+    return `
+    <div class="word-book-item">
+      <div class="wb-word">${item.word}</div>
+      <div class="wb-phonetic">${item.phonetic || ''}</div>
+      <div class="wb-pos">${item.pos || ''}</div>
+      <div class="wb-meaning">${item.meaning || ''}</div>
+      ${senHtml}
+      <button class="unfav-btn" onclick="removeCollectedWord('${item.word}')">取消收藏</button>
+    </div>`;
+  }).join('');
+}
+
+// 渲染字幕收藏
+function renderPractice() {
+  const list = getPracticeSentences();
+  const el = document.getElementById('practiceList');
+  el.innerHTML = list.map((item, idx) => `
+    <div class="practice-item">
+      ${idx + 1}. ${item.text}
+      <button class="unfav-btn" onclick="removeSentence(\`${item.text}\`)" style="margin-top:8px;">取消收藏</button>
+    </div>
+  `).join('');
+}
+
+// VTT 字幕解析
+function parseVttTime(str){
+  const [h,m,s] = str.split(':');
+  const sec = parseFloat(s);
+  return parseInt(h)*3600 + parseInt(m)*60 + sec;
+}
+function parseVtt(text){
+  const lines = text.trim().split(/\n+/);
+  const res = [];
+  let i = 0;
+  while(i < lines.length && !lines[i].includes('-->')) i++;
+  for(;i<lines.length;){
+    const timeLine = lines[i];
+    if(!timeLine.includes('-->')){i++;continue;}
+    const [startStr, endStr] = timeLine.split('-->').map(x=>x.trim());
+    const start = parseVttTime(startStr);
+    const end = parseVttTime(endStr);
+    i++;
+    let en = '', zh = '';
+    if(lines[i]) en = lines[i].trim();i++;
+    if(lines[i]) zh = lines[i].trim();i++;
+    res.push({time:start, en, zh});
+  }
+  return res;
+}
+
+// 加载字幕 + 存入全局缓存
+async function loadSubtitle(videoSrc){
+  const subSrc = videoSrc.replace('.mp4','.vtt');
+  try{
+    const res = await fetch(subSrc);
+    if(!res.ok) throw 'no sub';
+    const text = await res.text();
+    subtitles = parseVtt(text);
+
+    // 存入全局缓存（去重）
+    subtitles.forEach(sub => {
+      sub.videoSrc = videoSrc;
+      const exists = allSubtitlesCache.some(
+        x => x.videoSrc === videoSrc && x.time === sub.time
+      );
+      if (!exists) allSubtitlesCache.push(sub);
+    });
+    localStorage.setItem('allSubtitlesCache', JSON.stringify(allSubtitlesCache));
+
+    renderSubtitles();
+  }catch(e){
+    subtitleList.innerHTML = '<div style="text-align:center;padding:20px;color:#fff">暂无对应VTT字幕</div>';
+    subtitles = [];
+  }
+}
+
+window.onload = async function () {
+  await loadWordLibrary();
+  renderWordBook();
+  renderPractice();
+
+  video.addEventListener("timeupdate", syncSubtitles);
+  video.addEventListener("play", () => {
+    document.getElementById('videoBox').classList.add('playing');
+  });
+  video.addEventListener("pause", () => {
+    document.getElementById('videoBox').classList.remove('playing');
+  });
+  video.addEventListener("ended", resetSubtitleState);
+  
+  modalOverlay.onclick = closeWordModal;
+};
+
+function renderSubtitles() {
+  subtitleList.innerHTML = "";
+  if(!subtitles.length) return;
+  const practice = getPracticeSentences();
+  
+  subtitles.forEach((item, index) => {
+    let enHtml = item.en;
+    Object.keys(wordLibrary).forEach(word => {
+      const info = wordLibrary[word];
+      let className = '';
+      if(info.type === 'cet4') className = 'word-cet4';
+      if(info.type === 'cet6') className = 'word-cet6';
+      if(info.type === 'ielts') className = 'word-ielts';
+      const reg = new RegExp(`\\b${word}\\b`, "gi");
+      enHtml = enHtml.replace(reg, `<span class="${className}" data-word="${word.toLowerCase()}">$&</span>`);
+    });
+
+    const text = item.en + ' ' + item.zh;
+    const isCollected = practice.some(p => p.text === text);
+    const div = document.createElement("div");
+    div.className = "subtitle-item";
+    div.onclick = () => jumpToSubtitle(index);
+    div.innerHTML = `
+      <button class="star-fav ${isCollected ? 'active' : ''}">★</button>
+      <div class="sub-en">${enHtml}</div>
+      <div class="sub-zh">${item.zh}</div>
+    `;
+    subtitleList.appendChild(div);
+  });
+}
+
+function syncSubtitles() {
+  const now = video.currentTime;
+  for (let i = 0; i < subtitles.length; i++) {
+    const cur = subtitles[i];
+    const next = subtitles[i + 1] || { time: 9999 };
+    if (now >= cur.time && now < next.time && i !== currentSubIndex) {
+      setActive(i);
+      break;
+    }
+  }
+}
+
+function setActive(index) {
+  const items = document.querySelectorAll(".subtitle-item");
+  const list = document.getElementById("subtitleList"); // 拿到字幕列表
+
+  items.forEach((item, i) => {
+    item.classList.remove("active", "played");
+    if (i === index) item.classList.add("active");
+    if (i < index) item.classList.add("played");
+  });
+
+  if (items[index]) {
+    // 👇 120 = 距离顶部120px，你改成 80 / 150 / 200 都行
+    list.scrollTop = items[index].offsetTop - 120;
+  }
+
+  currentSubIndex = index;
+}
+
+function jumpToSubtitle(index) {
+  if (subtitles[index]) {
+    video.currentTime = subtitles[index].time;
+    video.play();
+  }
+}
+
+// 从生词本句子跳转视频
+function openVideo(src, time = 0) {
+  showPage('videoPage');
+  video.src = src;
+  video.currentTime = time;
+  video.play().catch(() => { });
+  resetSubtitleState();
+  loadSubtitle(src);
+}
+
+function resetSubtitleState() {
+  currentSubIndex = -1;
+  document.querySelectorAll(".subtitle-item").forEach(el => {
+    el.classList.remove("active", "played");
+  });
+  subtitleList.style.transform = "translateY(0)";
+}
+
+document.addEventListener("click", e => {
+  if (e.target.classList.contains("word-cet4") || e.target.classList.contains("word-cet6") || e.target.classList.contains("word-ielts")) {
+    const word = e.target.dataset.word;
+    const info = wordLibrary[word];
+    if (!info) return;
+    wordPopup.style.display = "block";
+    const rect = e.target.getBoundingClientRect();
+    let left = Math.max(10, rect.left);
+    let top = rect.bottom + 10;
+    if (left + 240 > window.innerWidth) left = window.innerWidth - 250;
+    wordPopup.style.left = left + "px";
+    wordPopup.style.top = top + "px";
+    wordPopup.innerHTML = `
+      <p class="word-text">${word}</p>
+      <p>释义：${info.meaning}</p>
+      <p>音标：${info.phonetic}</p>
+      <p>词性：${info.pos}</p>
+      <p>等级：${info.type.toUpperCase()}</p>
+      <button class="word-fav">收藏单词</button>
+    `;
+  } else if (e.target.classList.contains("word-fav")) {
+    const word = e.target.closest('.word-popup').querySelector('.word-text').innerText;
+    collectWord(word);
+    e.target.textContent = "已收藏";
+    e.target.disabled = true;
+  } else if (e.target.classList.contains("star-fav")) {
+    const item = e.target.closest('.subtitle-item');
+    const text = item.innerText.trim();
+    const isActive = e.target.classList.contains('active');
+    if (isActive) {
+      removeSentence(text);
+      e.target.classList.remove('active');
+    } else {
+      collectSentence(text);
+      e.target.classList.add('active');
+    }
+  } else if (!wordPopup.contains(e.target)) {
+    wordPopup.style.display = "none";
+  }
+});
+
+function togglePlayPause() {
+  if (video.paused) video.play();
+  else video.pause();
+}
+function stopVideoAndBack() {
+  video.pause();
+  video.currentTime = 0;
+  document.getElementById('videoBox').classList.remove('playing');
+  showPage('dramaPage');
+}
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => {
+    p.classList.remove('active');
+  });
+  setTimeout(() => {
+    document.getElementById(id).classList.add('active');
+  }, 50);
+  
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  if (id === 'mainPage') document.querySelectorAll('.tab')[0].classList.add('active');
+  if (id.includes('oil') || id.includes('cet') || id.includes('word') || id.includes('practice')) document.querySelectorAll('.tab')[1].classList.add('active');
+  if (id === 'iboPage') document.querySelectorAll('.tab')[2].classList.add('active');
+}
+
+function addNewVideoCard() {
+  const img = document.getElementById('imgName').value.trim();
+  const vid = document.getElementById('videoName').value.trim();
+  const title = document.getElementById('videoTitle').value.trim() || '新视频';
+  if (!img || !vid) return;
+  const item = document.createElement('div');
+  item.className = 'video-item';
+  item.innerHTML = `
+  <div class="video-card" onclick="openVideo('${vid}')">
+    <div class="video-del-btn" onclick="deleteVideo(event,this)">×</div>
+    <img src="${img}" class="video-card-img">
+    <div class="video-card-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+  </div>
+  <input class="video-name" type="text" value="${title}">
+  `;
+  document.getElementById('mindVideoList').appendChild(item);
+  document.getElementById('imgName').value = '';
+  document.getElementById('videoName').value = '';
+  document.getElementById('videoTitle').value = '';
+}
+function deleteVideo(e, btn) {
+  e.stopPropagation();
+  if (confirm('确定删除？')) btn.closest('.video-item').remove();
+}
+
+document.getElementById('avatarInput').addEventListener('change', e => {
+  const f = e.target.files[0];
+  if (!f) return;
+  const r = new FileReader();
+  r.onload = e => document.getElementById('avatarPreview').src = e.target.result;
+  r.readAsDataURL(f);
+});
+
+function showWordInfo(w, p, m, pos) {
+  document.getElementById('modalWord').innerText = w;
+  document.getElementById('modalPhonetic').innerText = p || '';
+  document.getElementById('modalMeaning').innerText = m || '查询中';
+  document.getElementById('modalPos').innerText = pos || '';
+  document.getElementById('wordModal').style.display = 'block';
+  document.getElementById('modalOverlay').style.display = 'block';
+}
+function closeWordModal() {
+  document.getElementById('wordModal').style.display = 'none';
+  document.getElementById('modalOverlay').style.display = 'none';
+}
+
+document.getElementById('modalStar').onclick = function () {
+  const word = document.getElementById('modalWord').innerText;
+  collectWord(word);
+  this.classList.toggle('active');
+}
+
+// 自动轮播
+let bannerSwiper = document.getElementById('bannerSwiper');
+let bannerIndex = 0;
+const bannerTotal = bannerSwiper?.querySelectorAll('.banner-card').length || 0;
+
+function autoBannerRoll() {
+  if (bannerTotal <= 1) return;
+  bannerIndex++;
+  if (bannerIndex >= bannerTotal) bannerIndex = 0;
+  const cardWidth = bannerSwiper.querySelector('.banner-card').offsetWidth + 10;
+  bannerSwiper.scrollTo({
+    left: cardWidth * bannerIndex,
+    behavior: 'smooth'
+  });
+}
+if (bannerTotal > 1) {
+  setInterval(autoBannerRoll, 5000);
+}
+
+// GT 添加视频
+function addNewVideoCardGT() {
+  const img = document.getElementById('imgNameGt').value.trim();
+  const vid = document.getElementById('videoNameGt').value.trim();
+  const title = document.getElementById('videoTitleGt').value.trim() || '新视频';
+  if (!img || !vid) return;
+  const item = document.createElement('div');
+  item.className = 'video-item';
+  item.innerHTML = `
+  <div class="video-card" onclick="openVideo('${vid}')">
+    <div class="video-del-btn" onclick="deleteVideo(event,this)">×</div>
+    <img src="${img}" class="video-card-img">
+    <div class="video-card-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+  </div>
+  <input class="video-name" type="text" value="${title}">
+  `;
+  document.getElementById('gtVideoList').appendChild(item);
+  document.getElementById('imgNameGt').value = '';
+  document.getElementById('videoNameGt').value = '';
+  document.getElementById('videoTitleGt').value = '';
+}
+
+function playThisVoice(el) {
+  // 停止所有语音 + 隐藏所有 GIF
+  document.querySelectorAll('.voice-src').forEach(audio => {
+    audio.pause();
+    audio.currentTime = 0;
+  });
+  document.querySelectorAll('.voice-wave-gif').forEach(gif => {
+    gif.style.display = 'none';
+  });
+
+  const item = el.closest('.voice-item');
+  const audio = item.querySelector('.voice-src');
+  const gif = item.querySelector('.voice-wave-gif');
+
+  audio.play();
+  gif.style.display = 'inline-block'; // 改成 inline-block，跟文字对齐
+
+  audio.onended = () => {
+    gif.style.display = 'none';
+  };
+}
+
+function addVoiceBar() {
+  let name = document.getElementById('voiceName').value || 'yibo语录';
+  let time = document.getElementById('voiceTime').value || '00:15';
+  let file = document.getElementById('voiceFile').value || 'voice1.mp3';
+
+  let list = document.getElementById('voiceList');
+
+  let html = `
+  <div class="voice-item">
+    <img class="voice-avatar" src="logo.jpg">
+    <div class="voice-bar" onclick="playThisVoice(this)">
+      <div class="voice-text">
+        <img class="voice-wave-gif" alt="播放中">
+        ${name}
+      </div>
+      <div class="voice-time">${time}</div>
+    </div>
+    <audio class="voice-src" src="${file}">
+  </div>
+  `;
+
+  list.innerHTML += html;
+}
+</script>
+</body>
+</html>

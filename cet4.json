@@ -1,0 +1,12 @@
+{
+  "rainforest": {"phonetic":"/ˈreɪnfɔːrɪst/","meaning":"雨林","pos":"名词"},
+  "ocean": {"phonetic":"/ˈəʊʃən/","meaning":"海洋","pos":"名词"},
+  "creative": {"phonetic":"/kriˈeɪtɪv/","meaning":"创造性的","pos":"形容词"},
+  "explore": {"phonetic":"/ɪkˈsplɔː(r)/","meaning":"探索；探险","pos":"动词"},
+  "discovery": {"phonetic":"/dɪˈskʌvəri/","meaning":"发现；发觉","pos":"名词"},
+  "nature": {"phonetic":"/ˈneɪtʃə(r)/","meaning":"自然；天性","pos":"名词"},
+  "mysterious": {"phonetic":"/mɪˈstɪəriəs/","meaning":"神秘的","pos":"形容词"},
+  "valley": {"phonetic":"/ˈvæli/","meaning":"山谷；溪谷","pos":"名词"},
+  "peak": {"phonetic":"/piːk/","meaning":"山峰；最高点","pos":"名词"},
+  "mirror": {"phonetic":"/ˈmɪrə(r)/","meaning":"反映；反射","pos":"动词"}
+}
