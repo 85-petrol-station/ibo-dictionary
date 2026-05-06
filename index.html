@@ -12,7 +12,6 @@
     background-size: cover;
     background-color: #121212;
     color:#fff;
-    /* 👇 手机安全底部间距，防止被导航条挡住 */
     padding-bottom: env(safe-area-inset-bottom, 80px);
     position: relative;
     min-height: 100dvh;
@@ -28,7 +27,6 @@
 
   .page{
     background:rgba(30,30,30,0.2);
-    /* 👇 这行是修复手机太短的关键 */
     min-height: 100dvh;
     height: auto;
     padding-bottom:70px;
@@ -116,7 +114,6 @@
   }
   .video-box{
     width:100%;
-    /* 👇 手机标准视频比例，不会变形 */
     aspect-ratio: 16 / 9;
     background:#000;
     border-radius:12px;
@@ -162,8 +159,7 @@
 
   .subtitle-container{
     width: 100%;
-    /* 👇 手机自适应高度，不会太短也不会太长 */
-    max-height: 42vh;
+    max-height: 52vh;
     height: auto;
     min-height: 180px;
     overflow: auto;
@@ -298,7 +294,6 @@
     background:rgba(20,20,20,0.98);
     border-top:1px solid rgba(34, 197, 94, 0.3);
     height:50px;
-    /* 👇 手机底部安全距离，iPhone 不会被小白条挡住 */
     padding-bottom: env(safe-area-inset-bottom);
     display:flex;z-index:99;
     box-sizing: border-box;
@@ -322,10 +317,8 @@
     width:18px;height:18px;fill:#fff;
   }
 
-  @media (max-width: 380px) {
-    .video-grid{
-      grid-template-columns: 1fr;
-    }
+  .video-grid{
+    padding:0 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px;
   }
   .video-item{
     display:flex;flex-direction:column;gap:6px;
@@ -414,7 +407,6 @@
     text-align:center; border-radius:8px; cursor:pointer;
   }
 
-  /* 单词卡片美化 */
   .word-card {
     background: rgba(45,45,45,0.9);
     border-radius: 12px;
@@ -452,7 +444,6 @@
     line-height: 1.5;
   }
 
-  /* 生词本卡片（超级美化） */
   .word-book-item {
     background: rgba(50,50,50,0.95);
     border-radius: 12px;
@@ -520,7 +511,6 @@
     margin-top: 10px;
   }
 
-  /* 字幕收藏 */
   .practice-item {
     background: rgba(50,50,50,0.95);
     padding: 14px;
@@ -550,7 +540,6 @@
     font-size: 14px;
   }
 
-  /* 语音条列表 */
   .voice-list {
     padding: 0 16px;
     display: flex;
@@ -559,14 +548,12 @@
     margin-bottom: 10px;
   }
 
-  /* 一条语音 */
   .voice-item {
     display: flex;
     align-items: center;
     gap: 10px;
   }
 
-  /* 头像 */
   .voice-avatar {
     width: 46px;
     height: 46px;
@@ -574,7 +561,6 @@
     object-fit: cover;
   }
 
-  /* 绿色语音条 */
   .voice-bar {
     background-color: #66cc66;
     color: #000;
@@ -587,27 +573,24 @@
     cursor: pointer;
   }
 
-  /* 语音名称 */
   .voice-text {
-    position: absolute;
-    bottom: 12px;
-    left: 16px; /* 靠左 */
-    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 15px;
   }
 
   .voice-wave-gif {
-    height: 22px; /* 大小刚好 */
+    height: 22px;
     width: auto;
-    display: none; /* 播放时才显示 */
+    display: none;
   }
 
-  /* 时长 */
   .voice-time {
     font-size: 13px;
     opacity: 0.8;
   }
 
-  /* 隐藏音频 */
   .voice-src {
     display: none;
   }
@@ -629,7 +612,6 @@
 
 <div class="word-popup" id="wordPopup"></div>
 
-<!-- 首页 -->
 <div id="mainPage" class="page active">
   <div class="header">
     <img src="logo.jpg" class="logo">
@@ -663,36 +645,34 @@
     </div>
   </div>
 
-  <!-- 保留Yibo热点标题 -->
   <div class="section-title" id="mainTitle">Yibo语音</div>
 
-  <!-- 语音条列表 -->
   <div class="voice-list" id="voiceList">
-
-    <!-- 第一条语音 -->
     <div class="voice-item">
       <img class="voice-avatar" src="logo.jpg">
       <div class="voice-bar" onclick="playThisVoice(this)">
         <div class="voice-text">
           <img class="voice-wave-gif" src="voice-wave.gif" alt="播放中">
+          Yibo语音
         </div>
         <div class="voice-time">00:10</div>
       </div>
       <audio class="voice-src" src="voice1.mp3"></audio>
     </div>
-
   </div>
 
-  <!-- 添加语音条按钮 -->
-  <div style="padding:10px 16px">
+  <div id="adminVoiceForm" style="display:none; padding:10px 16px; border-top:1px solid rgba(34,197,94,0.2); margin-top:10px;">
     <input type="text" id="voiceName" placeholder="语音名称：Yibo语音" style="width:100%;padding:8px;margin-bottom:5px;border-radius:8px;background:#333;color:#fff;border:0">
     <input type="text" id="voiceTime" placeholder="时长：00:15" style="width:100%;padding:8px;margin-bottom:5px;border-radius:8px;background:#333;color:#fff;border:0">
     <input type="text" id="voiceFile" placeholder="音频：voice1.mp3" style="width:100%;padding:8px;margin-bottom:5px;border-radius:8px;background:#333;color:#fff;border:0">
     <button onclick="addVoiceBar()" style="width:100%;background:#66cc66;color:#fff;padding:8px;border-radius:8px;border:0">添加语音条</button>
   </div>
+
+  <button id="adminToggleBtn" style="position:fixed;top:12px;right:16px;z-index:1000;background:rgba(34,197,94,0.8);color:#000;border:0;border-radius:6px;padding:4px 10px;font-size:12px;">
+    管理
+  </button>
 </div>
 
-<!-- 追剧学习 -->
 <div id="dramaPage" class="page">
   <div class="secondary-header">
     <div class="secondary-title">探索心境</div>
@@ -729,7 +709,6 @@
   </div>
 </div>
 
-<!-- China GT -->
 <div id="chinaGtPage" class="page">
   <div class="secondary-header">
     <div class="secondary-title">China GT</div>
@@ -749,7 +728,6 @@
   </div>
 </div>
 
-<!-- 视频播放 -->
 <div id="videoPage" class="page">
   <div class="secondary-header">
     <div class="secondary-title">视频播放</div>
@@ -770,7 +748,6 @@
   </div>
 </div>
 
-<!-- 加油站 -->
 <div id="oilPage" class="page">
   <div class="secondary-header">
     <div class="secondary-title">加油站</div>
@@ -789,7 +766,6 @@
   </div>
 </div>
 
-<!-- 四级单词 -->
 <div id="cet4Page" class="page">
   <div class="secondary-header">
     <div class="secondary-title">四级单词</div>
@@ -797,7 +773,6 @@
       <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6 1.4 1.4-4.6 4.6 4.6 4.6z"/></svg></div>
   </div>
 
-  <!-- 新增搜索框 -->
   <div class="search-box" style="padding:10px 16px;">
     <input class="search-input" id="cet4Search" type="text" placeholder="搜索四级单词" oninput="filterCet4Words()">
   </div>
@@ -806,7 +781,6 @@
   <div id="cet4WordList"></div>
 </div>
 
-<!-- 六级单词 -->
 <div id="cet6Page" class="page">
   <div class="secondary-header">
     <div class="secondary-title">六级单词</div>
@@ -814,7 +788,6 @@
       <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6 1.4 1.4-4.6 4.6 4.6 4.6z"/></svg></div>
   </div>
 
-  <!-- 搜索框 和 四级同款 -->
   <div class="search-box" style="padding:10px 16px;">
     <input class="search-input" id="cet6Search" type="text" placeholder="搜索六级单词" oninput="filterCet6Words()">
   </div>
@@ -823,7 +796,6 @@
   <div id="cet6WordList"></div>
 </div>
 
-<!-- 生词本 -->
 <div id="wordbookPage" class="page">
   <div class="secondary-header">
     <div class="secondary-title">生词本</div>
@@ -834,7 +806,6 @@
   <div id="collectedList"></div>
 </div>
 
-<!-- 字幕收藏 -->
 <div id="practicePage" class="page">
   <div class="secondary-header">
     <div class="secondary-title">字幕收藏</div>
@@ -845,7 +816,6 @@
   <div id="practiceList"></div>
 </div>
 
-<!-- ibo -->
 <div id="iboPage" class="page">
   <div class="secondary-header">
     <div class="secondary-title">ibo</div>
@@ -860,7 +830,6 @@
   </div>
 </div>
 
-<!-- BBC -->
 <div id="bbcPage" class="page">
   <div class="secondary-header">
     <div class="secondary-title">BBC NEWS</div>
@@ -890,10 +859,8 @@ let subVisible = true;
 let wordLibrary = {};
 let cet4Words = {}, cet6Words = {};
 
-// 全局：缓存所有视频的字幕（永久保存）
 let allSubtitlesCache = JSON.parse(localStorage.getItem('allSubtitlesCache') || '[]');
 
-// 加载词库 + 自动统计数量
 async function loadWordLibrary() {
   try {
     cet4Words = await fetch("cet4.json").then(r => r.json());
@@ -918,7 +885,6 @@ async function loadWordLibrary() {
   }
 }
 
-// 全局保存排序后的四级单词
 let sortedCet4 = [];
 
 function renderCet4List() {
@@ -932,7 +898,6 @@ function renderCet4List() {
     <div class="word-card" onclick="showWordInfo('${w}','${d.phonetic}','${d.meaning}','${d.pos}')">
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
         <span style="font-weight:bold;color:#66cc66;">${w}</span>
-        <!-- 音标已改为橙色 #ff9500 -->
         <span style="color:#ff9500;">${d.phonetic || ''}</span>
         <span style="background:rgba(34,197,94,0.2);padding:2px 6px;border-radius:10px;font-size:12px;">${d.pos || ''}</span>
         <span style="color:#eee;flex:1;margin-left:4px;">${d.meaning || ''}</span>
@@ -942,29 +907,6 @@ function renderCet4List() {
   list.innerHTML = html;
 }
 
-function filterCet4Words() {
-  const keyword = document.getElementById("cet4Search").value.toLowerCase().trim();
-  const list = document.getElementById("cet4WordList");
-  
-  let html = "";
-  for (let w of sortedCet4) {
-    if (w.toLowerCase().includes(keyword) || cet4Words[w].meaning.includes(keyword)) {
-      const d = cet4Words[w];
-      html += `
-      <div class="word-card" onclick="showWordInfo('${w}','${d.phonetic}','${d.meaning}','${d.pos}')">
-        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-          <span style="font-weight:bold;color:#66cc66;">${w}</span>
-          <span style="color:#ff9500;">${d.phonetic || ''}</span>
-          <span style="background:rgba(34,197,94,0.2);padding:2px 6px;border-radius:10px;font-size:12px;">${d.pos || ''}</span>
-          <span style="color:#eee;flex:1;margin-left:4px;">${d.meaning || ''}</span>
-        </div>
-      </div>`;
-    }
-  }
-  list.innerHTML = html;
-}
-
-// 四级单词搜索过滤
 function filterCet4Words() {
   const keyword = document.getElementById("cet4Search").value.toLowerCase().trim();
   const list = document.getElementById("cet4WordList");
@@ -987,14 +929,11 @@ function filterCet4Words() {
   list.innerHTML = html;
 }
 
-// 全局保存排序后的六级单词
 let sortedCet6 = [];
 
-// 渲染六级单词（A-Z排序 + 同行布局 和四级同款）
 function renderCet6List() {
   const list = document.getElementById("cet6WordList");
   
-  // A-Z 排序
   sortedCet6 = Object.keys(cet6Words).sort((a, b) => a.localeCompare(b));
   
   let html = "";
@@ -1013,7 +952,6 @@ function renderCet6List() {
   list.innerHTML = html;
 }
 
-// 六级单词搜索过滤 和四级同款
 function filterCet6Words() {
   const keyword = document.getElementById("cet6Search").value.toLowerCase().trim();
   const list = document.getElementById("cet6WordList");
@@ -1047,7 +985,6 @@ function toggleSubtitleShow() {
   }
 }
 
-// 本地存储
 function getCollectedWords() {
   return JSON.parse(localStorage.getItem('collectedWords') || '[]');
 }
@@ -1061,7 +998,6 @@ function setPracticeSentences(arr) {
   localStorage.setItem('practice', JSON.stringify(arr));
 }
 
-// 收藏单词
 function collectWord(word) {
   const info = wordLibrary[word] || {};
   const list = getCollectedWords();
@@ -1078,7 +1014,6 @@ function collectWord(word) {
   }
 }
 
-// 取消收藏
 function removeCollectedWord(word) {
   let list = getCollectedWords();
   list = list.filter(item => item.word !== word);
@@ -1086,7 +1021,6 @@ function removeCollectedWord(word) {
   renderWordBook();
 }
 
-// 收藏句子
 function collectSentence(text) {
   const list = getPracticeSentences();
   const exists = list.some(item => item.text === text);
@@ -1103,14 +1037,12 @@ function removeSentence(text) {
   renderPractice();
 }
 
-// 渲染生词本（自动从全站字幕提取句子）
 function renderWordBook() {
   const list = getCollectedWords();
   const el = document.getElementById('collectedList');
 
   el.innerHTML = list.map(item => {
     const word = item.word;
-    // 从全站所有缓存字幕中匹配
     const matched = allSubtitlesCache.filter(sub =>
       new RegExp(`\\b${word}\\b`, 'i').test(sub.en)
     );
@@ -1138,7 +1070,6 @@ function renderWordBook() {
   }).join('');
 }
 
-// 渲染字幕收藏
 function renderPractice() {
   const list = getPracticeSentences();
   const el = document.getElementById('practiceList');
@@ -1150,7 +1081,6 @@ function renderPractice() {
   `).join('');
 }
 
-// VTT 字幕解析
 function parseVttTime(str){
   const [h,m,s] = str.split(':');
   const sec = parseFloat(s);
@@ -1176,7 +1106,6 @@ function parseVtt(text){
   return res;
 }
 
-// 加载字幕 + 存入全局缓存
 async function loadSubtitle(videoSrc){
   const subSrc = videoSrc.replace('.mp4','.vtt');
   try{
@@ -1185,7 +1114,6 @@ async function loadSubtitle(videoSrc){
     const text = await res.text();
     subtitles = parseVtt(text);
 
-    // 存入全局缓存（去重）
     subtitles.forEach(sub => {
       sub.videoSrc = videoSrc;
       const exists = allSubtitlesCache.some(
@@ -1264,7 +1192,7 @@ function syncSubtitles() {
 
 function setActive(index) {
   const items = document.querySelectorAll(".subtitle-item");
-  const list = document.getElementById("subtitleList"); // 拿到字幕列表
+  const list = document.getElementById("subtitleList");
 
   items.forEach((item, i) => {
     item.classList.remove("active", "played");
@@ -1273,7 +1201,6 @@ function setActive(index) {
   });
 
   if (items[index]) {
-    // 👇 120 = 距离顶部120px，你改成 80 / 150 / 200 都行
     list.scrollTop = items[index].offsetTop - 120;
   }
 
@@ -1287,7 +1214,6 @@ function jumpToSubtitle(index) {
   }
 }
 
-// 从生词本句子跳转视频
 function openVideo(src, time = 0) {
   showPage('videoPage');
   video.src = src;
@@ -1423,7 +1349,6 @@ document.getElementById('modalStar').onclick = function () {
   this.classList.toggle('active');
 }
 
-// 自动轮播
 let bannerSwiper = document.getElementById('bannerSwiper');
 let bannerIndex = 0;
 const bannerTotal = bannerSwiper?.querySelectorAll('.banner-card').length || 0;
@@ -1442,7 +1367,6 @@ if (bannerTotal > 1) {
   setInterval(autoBannerRoll, 5000);
 }
 
-// GT 添加视频
 function addNewVideoCardGT() {
   const img = document.getElementById('imgNameGt').value.trim();
   const vid = document.getElementById('videoNameGt').value.trim();
@@ -1465,7 +1389,6 @@ function addNewVideoCardGT() {
 }
 
 function playThisVoice(el) {
-  // 停止所有语音 + 隐藏所有 GIF
   document.querySelectorAll('.voice-src').forEach(audio => {
     audio.pause();
     audio.currentTime = 0;
@@ -1479,7 +1402,7 @@ function playThisVoice(el) {
   const gif = item.querySelector('.voice-wave-gif');
 
   audio.play();
-  gif.style.display = 'inline-block'; // 改成 inline-block，跟文字对齐
+  gif.style.display = 'inline-block';
 
   audio.onended = () => {
     gif.style.display = 'none';
@@ -1498,7 +1421,7 @@ function addVoiceBar() {
     <img class="voice-avatar" src="logo.jpg">
     <div class="voice-bar" onclick="playThisVoice(this)">
       <div class="voice-text">
-        <img class="voice-wave-gif" alt="播放中">
+        <img class="voice-wave-gif" src="voice-wave.gif" alt="播放中">
         ${name}
       </div>
       <div class="voice-time">${time}</div>
@@ -1509,6 +1432,25 @@ function addVoiceBar() {
 
   list.innerHTML += html;
 }
+
+const adminToggleBtn = document.getElementById('adminToggleBtn');
+const adminVoiceForm = document.getElementById('adminVoiceForm');
+let adminMode = false;
+
+adminToggleBtn.onclick = function(){
+  adminMode = !adminMode;
+  if(adminMode){
+    adminVoiceForm.style.display = 'block';
+    this.innerText = '关闭管理';
+    this.style.background = '#ff3b30';
+    this.style.color = '#fff';
+  }else{
+    adminVoiceForm.style.display = 'none';
+    this.innerText = '管理';
+    this.style.background = 'rgba(34,197,94,0.8)';
+    this.style.color = '#000';
+  }
+};
 </script>
 </body>
 </html>
