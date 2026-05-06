@@ -84,17 +84,40 @@
   .nav-item.active:hover{background:rgba(34,197,94,1);}
 
   .swiper{
-    display:flex;gap:10px;overflow-x:auto;
-    scroll-snap-type:x mandatory;scroll-behavior:smooth;
-    scrollbar-width: none;-ms-overflow-style: none;
-    margin-top:5px;
-    padding:0 26px;
+    display:flex;
+    gap:0;
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    scroll-behavior:smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    margin-top:12px;
+    /* 👇 去掉左右 padding，让内容贴边 */
+    padding:0;
+    width:100%;
   }
   .swiper::-webkit-scrollbar {display: none;}
   .banner-card{
-    width:85%;aspect-ratio:16/9;border-radius:14px;
-    flex-shrink:0;scroll-snap-align:start;position:relative;overflow:hidden;cursor:pointer;
+    /* 👇 改成100%宽度，占满屏幕 */
+    width:100%;
+    aspect-ratio:16/9;
+    border-radius:14px;
+    flex-shrink:0;
+    scroll-snap-align:start;
+    position:relative;
+    overflow:hidden;
+    cursor:pointer;
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    /* 👇 左右内边距和头像对齐 */
+    padding:0 16px;
+    box-sizing: border-box;
+  }
+  /* 👇 图片容器再加上边距，保证和文字/头像对齐 */
+  .banner-img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    border-radius:14px;
   }
   .banner-img{width:100%;height:100%;object-fit:cover;}
   .banner-text{
@@ -1356,7 +1379,8 @@ function autoBannerRoll() {
   if (bannerTotal <= 1) return;
   bannerIndex++;
   if (bannerIndex >= bannerTotal) bannerIndex = 0;
-  const cardWidth = bannerSwiper.querySelector('.banner-card').offsetWidth + 10;
+  // 👇 去掉+10，按100%宽度滚动
+  const cardWidth = bannerSwiper.querySelector('.banner-card').offsetWidth;
   bannerSwiper.scrollTo({
     left: cardWidth * bannerIndex,
     behavior: 'smooth'
