@@ -121,7 +121,7 @@
   }
   .banner-img{width:100%;height:100%;object-fit:cover;}
   .banner-text{
-    position:absolute;bottom:16px;left:16px;color:#fff;
+    position:absolute;bottom:16px;left:30px;color:#fff;
     font-size:18px;font-weight:bold;text-shadow:0 1px 4px rgba(0,0,0,0.7);
   }
 
@@ -585,16 +585,19 @@
   }
 
   .voice-bar {
-    background-color: #66cc66;
-    color: #000;
-    padding: 10px 14px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    min-width: 150px;
-    cursor: pointer;
-  }
+  background-color: #66cc66;
+  color: #000;
+  padding: 10px 16px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: fit-content;
+  min-width: 130px;
+  max-width: 85%;
+  gap: 10px;
+  cursor: pointer;
+}
 
   .voice-text {
     display: flex;
@@ -671,15 +674,14 @@
 
   <div class="voice-list" id="voiceList">
     <div class="voice-item">
-      <img class="voice-avatar" src="logo.jpg">
-      <div class="voice-bar" onclick="playThisVoice(this)">
+     <img class="voice-avatar" src="logo.jpg">
+     <div class="voice-bar" onclick="playThisVoice(this)">
         <div class="voice-text">
           <img class="voice-wave-gif" src="voice-wave.gif" alt="播放中">
-          Yibo语音
         </div>
         <div class="voice-time">00:10</div>
       </div>
-      <audio class="voice-src" src="voice1.mp3"></audio>
+      <audio class="voice-src" src="voice1.mp3">
     </div>
   </div>
 
@@ -1167,6 +1169,11 @@ window.onload = async function () {
   video.addEventListener("ended", resetSubtitleState);
   
   modalOverlay.onclick = closeWordModal;
+
+  // 自动加载语音 + 视频
+  renderVoiceList();
+  renderDramaVideos();
+  renderGTVideos();
 };
 
 function renderSubtitles() {
@@ -1324,24 +1331,34 @@ function addNewVideoCard() {
   const vid = document.getElementById('videoName').value.trim();
   const title = document.getElementById('videoTitle').value.trim() || '新视频';
   if (!img || !vid) return;
-  const item = document.createElement('div');
-  item.className = 'video-item';
-  item.innerHTML = `
-  <div class="video-card" onclick="openVideo('${vid}')">
-    <div class="video-del-btn" onclick="deleteVideo(event,this)">×</div>
-    <img src="${img}" class="video-card-img">
-    <div class="video-card-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-  </div>
-  <input class="video-name" type="text" value="${title}">
-  `;
-  document.getElementById('mindVideoList').appendChild(item);
+
+  let list = JSON.parse(localStorage.getItem('dramaVideos') || '[]');
+  list.push({ img, vid, title });
+  localStorage.setItem('dramaVideos', JSON.stringify(list));
+
+  renderDramaVideos();
+
   document.getElementById('imgName').value = '';
   document.getElementById('videoName').value = '';
   document.getElementById('videoTitle').value = '';
 }
 function deleteVideo(e, btn) {
   e.stopPropagation();
-  if (confirm('确定删除？')) btn.closest('.video-item').remove();
+  if (!confirm('确定删除？')) return;
+
+  const item = btn.closest('.video-item');
+  const vidSrc = item.querySelector('.video-card').getAttribute('onclick').match(/'(.+?)'/)[1];
+
+  // 从本地存储删除
+  let dramaList = JSON.parse(localStorage.getItem('dramaVideos') || '[]');
+  dramaList = dramaList.filter(v => v.vid !== vidSrc);
+  localStorage.setItem('dramaVideos', JSON.stringify(dramaList));
+
+  let gtList = JSON.parse(localStorage.getItem('gtVideos') || '[]');
+  gtList = gtList.filter(v => v.vid !== vidSrc);
+  localStorage.setItem('gtVideos', JSON.stringify(gtList));
+
+  item.remove();
 }
 
 document.getElementById('avatarInput').addEventListener('change', e => {
@@ -1395,17 +1412,13 @@ function addNewVideoCardGT() {
   const vid = document.getElementById('videoNameGt').value.trim();
   const title = document.getElementById('videoTitleGt').value.trim() || '新视频';
   if (!img || !vid) return;
-  const item = document.createElement('div');
-  item.className = 'video-item';
-  item.innerHTML = `
-  <div class="video-card" onclick="openVideo('${vid}')">
-    <div class="video-del-btn" onclick="deleteVideo(event,this)">×</div>
-    <img src="${img}" class="video-card-img">
-    <div class="video-card-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-  </div>
-  <input class="video-name" type="text" value="${title}">
-  `;
-  document.getElementById('gtVideoList').appendChild(item);
+
+  let list = JSON.parse(localStorage.getItem('gtVideos') || '[]');
+  list.push({ img, vid, title });
+  localStorage.setItem('gtVideos', JSON.stringify(list));
+
+  renderGTVideos();
+
   document.getElementById('imgNameGt').value = '';
   document.getElementById('videoNameGt').value = '';
   document.getElementById('videoTitleGt').value = '';
@@ -1432,28 +1445,58 @@ function playThisVoice(el) {
   };
 }
 
+// 保存语音到本地
 function addVoiceBar() {
   let name = document.getElementById('voiceName').value || 'yibo语录';
   let time = document.getElementById('voiceTime').value || '00:15';
   let file = document.getElementById('voiceFile').value || 'voice1.mp3';
 
-  let list = document.getElementById('voiceList');
+  let list = JSON.parse(localStorage.getItem('voiceList') || '[]');
+  list.push({ name, time, file });
+  localStorage.setItem('voiceList', JSON.stringify(list));
+
+  renderVoiceList();
+
+  document.getElementById('voiceName').value = '';
+  document.getElementById('voiceTime').value = '';
+  document.getElementById('voiceFile').value = '';
+}
+
+// 加载语音（刷新不丢）
+function renderVoiceList() {
+  let list = JSON.parse(localStorage.getItem('voiceList') || '[]');
+  let container = document.getElementById('voiceList');
 
   let html = `
+  <!-- 默认语音 -->
   <div class="voice-item">
     <img class="voice-avatar" src="logo.jpg">
     <div class="voice-bar" onclick="playThisVoice(this)">
       <div class="voice-text">
         <img class="voice-wave-gif" src="voice-wave.gif" alt="播放中">
-        ${name}
       </div>
-      <div class="voice-time">${time}</div>
+      <div class="voice-time">00:10</div>
     </div>
-    <audio class="voice-src" src="${file}">
+    <audio class="voice-src" src="voice1.mp3"></audio>
   </div>
   `;
 
-  list.innerHTML += html;
+  list.forEach(item => {
+    html += `
+    <div class="voice-item">
+      <img class="voice-avatar" src="logo.jpg">
+      <div class="voice-bar" onclick="playThisVoice(this)">
+        <div class="voice-text">
+          <img class="voice-wave-gif" src="voice-wave.gif" alt="播放中">
+        </div>
+        <div class="voice-time">${item.time}</div>
+      </div>
+      <audio class="voice-src" src="${item.file}"></audio>
+    </div>
+    `;
+  });
+
+  container.innerHTML = html;
 }
 
 const adminToggleBtn = document.getElementById('adminToggleBtn');
