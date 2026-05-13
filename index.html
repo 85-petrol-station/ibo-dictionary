@@ -7,26 +7,59 @@
 <style>
   *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto}
 
+  :root {
+    --bg-body: #121212;
+    --bg-mask: rgba(18,18,18,0.75);
+    --bg-page: rgba(30,30,30,0.2);
+    --bg-card: rgba(50,50,50,0.95);
+    --bg-card-light: rgba(45,45,45,0.9);
+    --bg-input: rgba(50,50,50,0.6);
+    --bg-input-focus: rgba(60,60,60,0.8);
+    --bg-nav: rgba(70,70,70,0.9);
+    --bg-tabbar: rgba(20,20,20,0.98);
+    --color-text: #fff;
+    --color-text-secondary: #ccc;
+    --color-text-eee: #eee;
+    --border-color: rgba(34, 197, 94, 0.4);
+  }
+  html.light {
+    --bg-body: #f5f7fa;
+    --bg-mask: rgba(255,255,255,0.85);
+    --bg-page: rgba(255,255,255,0.3);
+    --bg-card: rgba(255,255,255,0.95);
+    --bg-card-light: rgba(255,255,255,0.9);
+    --bg-input: rgba(255,255,255,0.8);
+    --bg-input-focus: rgba(255,255,255,1);
+    --bg-nav: rgba(230,230,230,0.9);
+    --bg-tabbar: rgba(255,255,255,0.98);
+    --color-text: #222;
+    --color-text-secondary: #666;
+    --color-text-eee: #333;
+    --border-color: rgba(34, 197, 94, 0.5);
+  }
+
   body{
     background: url(bg.jpg) no-repeat center top fixed;
     background-size: cover;
-    background-color: #121212;
-    color:#fff;
+    background-color: var(--bg-body);
+    color: var(--color-text);
     padding-bottom: env(safe-area-inset-bottom, 80px);
     position: relative;
     min-height: 100dvh;
     height: auto;
+    transition: all 0.3s ease;
   }
   body::before{
     content:"";
     position:fixed;
     inset:0;
-    background:rgba(18,18,18,0.75);
+    background: var(--bg-mask);
     z-index:-1;
+    transition: all 0.3s ease;
   }
 
   .page{
-    background:rgba(30,30,30,0.2);
+    background: var(--bg-page);
     min-height: 100dvh;
     height: auto;
     padding-bottom:70px;
@@ -49,23 +82,23 @@
     width:40px;height:40px;border-radius:50%;object-fit:cover;
   }
   .logo-text{
-    font-size:18px;font-weight:bold;color:#66cc66;
+    font-size:18px;font-weight:bold;color:#00953d;
   }
 
   .search-box{padding:10px 16px;background:transparent !important;}
   .search-input{
     width:100%;padding:10px 14px;border-radius:24px;
-    border:1px solid rgba(34, 197, 94, 0.4);
+    border:1px solid var(--border-color);
     outline:none;font-size:14px;
-    background:rgba(50,50,50,0.6);
-    color:#fff;
+    background: var(--bg-input);
+    color: var(--color-text);
     transition: all 0.2s;
   }
   .search-input:focus{
-    background:rgba(60,60,60,0.8);
+    background: var(--bg-input-focus);
     border-color: rgba(34,197,94,0.8);
   }
-  .search-input::placeholder{color:#ccc;}
+  .search-input::placeholder{color:var(--color-text-secondary);}
 
   .nav{
     display:flex;gap:8px;padding:10px 16px 5px;
@@ -73,14 +106,14 @@
     overflow-x:auto;white-space:nowrap;
   }
   .nav-item{
-    padding:6px 12px;background:rgba(70,70,70,0.9);
+    padding:6px 12px;background:var(--bg-nav);
     border-radius:20px;
     font-size:13px;flex-shrink:0;cursor:pointer;
-    color:#fff;
+    color:var(--color-text);
     transition: all 0.2s;
   }
   .nav-item.active{background:rgba(34, 197, 94, 0.9);color:#fff;}
-  .nav-item:hover{background:rgba(80,80,80,1);}
+  .nav-item:hover{background:rgba(80,80,80,1);color:#fff;}
   .nav-item.active:hover{background:rgba(34,197,94,1);}
 
   .swiper{
@@ -92,13 +125,11 @@
     scrollbar-width: none;
     -ms-overflow-style: none;
     margin-top:12px;
-    /* 👇 去掉左右 padding，让内容贴边 */
     padding:0;
     width:100%;
   }
   .swiper::-webkit-scrollbar {display: none;}
   .banner-card{
-    /* 👇 改成100%宽度，占满屏幕 */
     width:100%;
     aspect-ratio:16/9;
     border-radius:14px;
@@ -108,24 +139,21 @@
     overflow:hidden;
     cursor:pointer;
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    /* 👇 左右内边距和头像对齐 */
     padding:0 16px;
     box-sizing: border-box;
   }
-  /* 👇 图片容器再加上边距，保证和文字/头像对齐 */
   .banner-img{
     width:100%;
     height:100%;
     object-fit:cover;
     border-radius:14px;
   }
-  .banner-img{width:100%;height:100%;object-fit:cover;}
   .banner-text{
     position:absolute;bottom:16px;left:30px;color:#fff;
     font-size:18px;font-weight:bold;text-shadow:0 1px 4px rgba(0,0,0,0.7);
   }
 
-  .section-title{padding:14px 16px 8px;font-size:16px;font-weight:bold;color:#66cc66}
+  .section-title{padding:14px 16px 8px;font-size:16px;font-weight:bold;color:#00953d}
 
   .video-player-wrapper {
     width: 100%;
@@ -152,13 +180,13 @@
   .subtitle-switch-btn{
     position:absolute;
     right:12px;
-    bottom:12px;
-    padding:5px 12px;
+    top:12px;
+    padding:4px 9px;
     background:rgba(34,197,94,0.9);
     color:#fff;
     border:none;
     border-radius:6px;
-    font-size:13px;
+    font-size:10px;
     z-index:15;
     cursor:pointer;
   }
@@ -202,17 +230,17 @@
     position: relative;
     padding: 12px 15px;
     margin-bottom: 10px;
-    background: rgba(50,50,50,0.95);
+    background: var(--bg-card);
     border-radius: 8px;
     line-height: 1.8;
     font-size: 16px;
     transition: all 0.3s ease;
     opacity: 1;
     cursor: pointer;
-    color:#fff;
+    color:var(--color-text);
   }
   .subtitle-item.active {
-    background: rgb(47, 47, 47) !important;
+    background: var(--bg-card-light) !important;
     border: 1px solid rgba(34, 197, 94, 0.6);
   }
   .subtitle-item.played {
@@ -234,52 +262,93 @@
     border: none;
   }
   .star-fav.active {
-    color: #ffc107;
+    color: #00953d;
   }
   .sub-en {
     font-weight: 500;
-    color: #fff;
+    color: var(--color-text);
     margin-bottom: 4px;
   }
   .sub-zh {
-    color: #eee;
+    color: var(--color-text-eee);
     font-size: 15px;
   }
 
-  .word-cet4 {
+  /* 英文 四级/六级/雅思 不透明实色高亮条 */
+.word-cet4 {
+  display: inline-block;
+  background: transparent;
+  padding: 2px 5px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  margin: 0 2px;
+  color: #58f198;
+  /* 同色下划线 + 拉开距离 */
+  text-decoration: underline;
+  text-decoration-color: #58f198;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+}
+.word-cet6 {
+  display: inline-block;
+  background: transparent;
+  padding: 2px 5px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  margin: 0 2px;
+  color: #00b560;
+  text-decoration: underline;
+  text-decoration-color: #00b560;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+}
+.word-vocabulary {
+  display: inline-block;
+  background: transparent;
+  padding: 2px 5px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  margin: 0 2px;
+  color: #a8e428;
+  text-decoration: underline;
+  text-decoration-color: #a8e428;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+}
+
+
+  /* 中文：无底色、只变字体颜色、不加背景 */
+  .zh-cet4 {
     display: inline-block;
-    background: rgba(34, 197, 94, 0.35);
-    padding: 1px 4px;
-    border-radius: 3px;
-    cursor: pointer;
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    color: #58f198;
     font-weight: 500;
-    margin: 0 1px;
-    color:#fff;
   }
-  .word-cet6 {
+  .zh-cet6 {
     display: inline-block;
-    background: rgba(255, 221, 119, 0.35);
-    padding: 1px 4px;
-    border-radius: 3px;
-    cursor: pointer;
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    color: #00b560;
     font-weight: 500;
-    margin: 0 1px;
-    color:#fff;
   }
-  .word-ielts {
+  .zh-vocabulary {
     display: inline-block;
-    background: rgba(190, 140, 255, 0.35);
-    padding: 1px 4px;
-    border-radius: 3px;
-    cursor: pointer;
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    color: #a8e428;
     font-weight: 500;
-    margin: 0 1px;
-    color:#fff;
   }
 
   .word-popup {
-    position: fixed;
-    background: #2a2a2a;
+    position: absolute;
+    background: var(--bg-card);
     border: 1px solid #555;
     border-radius: 8px;
     padding: 10px 12px;
@@ -287,24 +356,25 @@
     z-index: 999;
     min-width: 220px;
     display: none;
-    color:#fff;
+    color:var(--color-text);
+    /* 取消 fixed，改成绝对定位，跟着文档流走 */
   }
   .word-popup p {
     margin: 4px 0;
     font-size: 14px;
     line-height: 1.4;
-    color:#fff;
+    color:var(--color-text);
   }
   .word-popup .word-text {
     font-weight: bold;
     font-size: 16px;
     margin-bottom: 6px;
-    color: #66cc66;
+    color: #58f198;
   }
   .word-fav {
     margin-top: 6px;
     padding: 5px 8px;
-    background: #66cc66;
+    background: #58f198;
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -314,22 +384,22 @@
 
   .tabbar{
     position:fixed;bottom:0;left:0;right:0;
-    background:rgba(20,20,20,0.98);
+    background:var(--bg-tabbar);
     border-top:1px solid rgba(34, 197, 94, 0.3);
     height:50px;
     padding-bottom: env(safe-area-inset-bottom);
     display:flex;z-index:99;
     box-sizing: border-box;
   }
-  .tab{flex:1;display:grid;place-items:center;font-size:12px;cursor:pointer;color:#ddd;}
-  .tab.active{color:#66cc66;}
+  .tab{flex:1;display:grid;place-items:center;font-size:12px;cursor:pointer;color:var(--color-text-secondary);}
+  .tab.active{color:#58f198;}
 
   .secondary-header{
     position:relative;padding:14px 16px;
     background:transparent;
   }
   .secondary-title{
-    font-size:19px;font-weight:bold;color:#66cc66;
+    font-size:19px;font-weight:bold;color:#00953d;
   }
   .header-back-btn{
     position:absolute;right:16px;top:14px;width:36px;height:36px;border-radius:50%;
@@ -337,14 +407,17 @@
     display:grid;place-items:center;cursor:pointer;z-index:2;
   }
   .header-back-btn svg{
-    width:18px;height:18px;fill:#fff;
+    width:18px;height:18px;fill:var(--color-text);
   }
 
   .video-grid{
     padding:0 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px;
   }
   .video-item{
-    display:flex;flex-direction:column;gap:6px;
+    display:flex;
+    flex-direction:column;
+    gap:0;
+    position:relative;
   }
   .video-card{
     aspect-ratio:16/9;border-radius:12px;overflow:hidden;position:relative;cursor:pointer;
@@ -359,28 +432,24 @@
   }
   .video-del-btn{
     position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:50%;
-    background:rgba(255,59,48,0.95);color:#fff;font-size:12px;
+    background:rgba(120,120,120,0.4);color:#fff;font-size:12px;
     display:grid;place-items:center;cursor:pointer;z-index:5;
-  }
-  .video-name{
-    padding:4px 0;font-size:14px;color:#fff;
-    outline:none;background:transparent;border:none;
-    width:100%;text-align:left;
+    display:none; /* 默认隐藏 */
   }
 
   .add-video-form{
     margin:12px 16px 20px;padding:12px;
-    background:rgba(50,50,50,0.95);
+    background:var(--bg-card);
     border-radius:12px;
     border:1px solid rgba(34,197,94,0.25);
   }
   .add-video-form input{
     width:100%;padding:8px 10px;margin-bottom:8px;border-radius:8px;
     border:1px solid rgba(34,197,94,0.3);outline:none;font-size:13px;
-    background:#333;color:#fff;
+    background:var(--bg-input);color:var(--color-text);
   }
   .add-video-btn{
-    width:100%;padding:9px;background:#66cc66;
+    width:100%;padding:9px;background:#00953d;
     color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:14px;
   }
 
@@ -389,28 +458,85 @@
   }
   .oil-item{
     flex:1;padding:8px;text-align:center;border-radius:10px;
-    background:#444;cursor:pointer;color:#fff;
+    background:var(--bg-nav);cursor:pointer;color:var(--color-text);
   }
-  .oil-item.active{background:#66cc66;color:#fff;}
+  .oil-item.active{background:#00953d;color:#fff;}
 
-  .ibo-card{
-    margin:20px 16px;padding:20px;
-    background:transparent !important;
-    text-align:center;
-  }
-  .ibo-avatar{
-    width:120px;height:120px;border-radius:50%;object-fit:cover;
-    margin-bottom:12px;
-    cursor:pointer;
-    border:2px solid rgba(34, 197, 94,0.4);
-  }
-  .ibo-name{
-    font-size:22px;font-weight:bold;color:#66cc66;
-    background:transparent !important;
-    border:none;outline:none;text-align:center;
-    width:100%;
-  }
-  .avatar-input{display:none;}
+  /* IBO 模块全局居中优化 + 新增个性签名样式 */
+.ibo-card {
+  margin: 50px auto 0;
+  padding: 30px 20px;
+  background: transparent !important;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+/* 头像样式优化 + 动效 */
+.ibo-avatar {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+  border: 2px solid rgba(34, 197, 94, 0.5);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.ibo-avatar:hover {
+  transform: scale(1.06);
+  box-shadow: 0 0 14px rgba(34, 197, 94, 0.4);
+}
+
+/* 昵称输入框 */
+.ibo-name {
+  font-size: 24px;
+  font-weight: 600;
+  color: #00953d;
+  background: transparent;
+  border: none;
+  outline: none;
+  text-align: center;
+  width: 220px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+.ibo-name:focus {
+  background: rgba(34, 197, 94, 0.12);
+}
+
+/* 新增：个性签名 */
+.ibo-sign {
+  font-size: 15px;
+  color: var(--color-text-secondary);
+  background: transparent;
+  border: none;
+  outline: none;
+  text-align: center;
+  width: 260px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  transition: background 0.2s;
+  border-bottom: 1px solid rgba(34,197,94,0.25);
+}
+.ibo-sign:focus {
+  background: rgba(34, 197, 94, 0.08);
+  border-bottom-color: rgba(34,197,94,0.5);
+}
+
+/* 底部说明文字 */
+.ibo-desc {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  margin-top: 4px;
+}
+
+.avatar-input {
+  display: none;
+}
 
   .modal-overlay {
     position: fixed; top:0; left:0; right:0; bottom:0;
@@ -418,20 +544,20 @@
   }
   .word-modal {
     position: fixed; left:50%; top:50%; transform:translate(-50%,-50%);
-    background:#2a2a2a; padding:20px; border-radius:12px; z-index:100;
-    width:80%; max-width:320px; display:none;color:#fff;
+    background:var(--bg-card); padding:20px; border-radius:12px; z-index:100;
+    width:80%; max-width:320px; display:none;color:var(--color-text);
     border:1px solid #555;
   }
-  .modal-title { font-size:18px; font-weight:bold; color:#66cc66; margin-bottom:6px; }
-  .modal-phonetic { color:#ffdd77; margin-bottom:6px; }
-  .modal-meaning { margin-bottom:10px;color:#fff; }
+  .modal-title { font-size:18px; font-weight:bold; color:#00953d; margin-bottom:6px; }
+  .modal-phonetic { color:#90ee90; margin-bottom:6px; }
+  .modal-meaning { margin-bottom:10px;color:var(--color-text); }
   .modal-close {
-    margin-top:12px; padding:8px; background:#66cc66; color:#fff;
+    margin-top:12px; padding:8px; background:#00953d; color:#fff;
     text-align:center; border-radius:8px; cursor:pointer;
   }
 
   .word-card {
-    background: rgba(45,45,45,0.9);
+    background: var(--bg-card-light);
     border-radius: 12px;
     padding: 16px;
     margin: 0 16px 12px;
@@ -439,23 +565,23 @@
     cursor: pointer;
   }
   .word-card-cet6 {
-    border-left-color: #ffdd77;
+    border-left: 3px solid #90ee90;
   }
   .word-card-word {
     font-size: 18px;
     font-weight: bold;
-    color: #66cc66;
+    color: #00953d;
     margin-bottom: 6px;
   }
   .word-card-phonetic {
-    color: #ffdd77;
+    color: #90ee90;
     font-size: 14px;
     margin-bottom: 6px;
   }
   .word-card-pos {
     display: inline-block;
     background: rgba(34,197,94,0.2);
-    color: #fff;
+    color: var(--color-text);
     padding: 2px 8px;
     border-radius: 10px;
     font-size: 12px;
@@ -463,12 +589,12 @@
   }
   .word-card-meaning {
     font-size: 15px;
-    color: #eee;
+    color: var(--color-text-eee);
     line-height: 1.5;
   }
 
   .word-book-item {
-    background: rgba(50,50,50,0.95);
+    background: var(--bg-card);
     border-radius: 12px;
     padding: 16px;
     margin: 0 16px 12px;
@@ -477,11 +603,11 @@
   .wb-word {
     font-size: 19px;
     font-weight: bold;
-    color: #66cc66;
+    color: #00953d;
     margin-bottom: 6px;
   }
   .wb-phonetic {
-    color: #ffdd77;
+    color: #90ee90;
     font-size: 14px;
     margin-bottom: 6px;
   }
@@ -491,12 +617,12 @@
     padding: 2px 6px;
     border-radius: 10px;
     font-size: 12px;
-    color: #fff;
+    color: var(--color-text);
     margin-bottom: 8px;
   }
   .wb-meaning {
     font-size: 15px;
-    color: #fff;
+    color: var(--color-text);
     margin-bottom: 10px;
     line-height: 1.5;
   }
@@ -510,7 +636,7 @@
     line-height: 1.5;
   }
   .wb-sentences-title {
-    color: #66cc66;
+    color: #00953d;
     font-size: 13px;
     margin-bottom: 6px;
     font-weight: bold;
@@ -521,10 +647,10 @@
     cursor: pointer;
   }
   .wb-sentence-item:hover {
-    color: #66cc66;
+    color: #00953d;
   }
   .unfav-btn {
-    background: #ff9800;
+    background: rgba(120, 120, 120, 0.5);
     color: #fff;
     border: none;
     padding: 6px 12px;
@@ -535,11 +661,11 @@
   }
 
   .practice-item {
-    background: rgba(50,50,50,0.95);
+    background: var(--bg-card);
     padding: 14px;
     border-radius: 10px;
     margin: 0 16px 10px;
-    color: #fff;
+    color: var(--color-text);
     line-height: 1.6;
   }
 
@@ -558,68 +684,168 @@
 
   .word-stat {
     text-align: center;
-    color: #66cc66;
+    color: #00953d;
     padding: 10px 16px;
     font-size: 14px;
   }
 
   .voice-list {
-    padding: 0 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    margin-bottom: 10px;
-  }
-
-  .voice-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .voice-avatar {
-    width: 46px;
-    height: 46px;
-    border-radius: 6px;
-    object-fit: cover;
-  }
-
-  .voice-bar {
-  background-color: #66cc66;
-  color: #000;
-  padding: 10px 16px;
-  border-radius: 10px;
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+.voice-item {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  width: fit-content;
-  min-width: 130px;
-  max-width: 85%;
   gap: 10px;
+  position: relative;
+}
+.voice-avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 6px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.voice-bar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: #00d559;
+  gap: 10px;
+  color: #000;
   cursor: pointer;
 }
 
-  .voice-text {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 15px;
-  }
+.voice-item[data-dur="00:00"] .voice-bar,
+.voice-item[data-dur="00:01"] .voice-bar,
+.voice-item[data-dur="00:02"] .voice-bar,
+.voice-item[data-dur="00:03"] .voice-bar,
+.voice-item[data-dur="00:04"] .voice-bar,
+.voice-item[data-dur="00:05"] .voice-bar,
+.voice-item[data-dur="00:06"] .voice-bar,
+.voice-item[data-dur="00:07"] .voice-bar,
+.voice-item[data-dur="00:08"] .voice-bar,
+.voice-item[data-dur="00:09"] .voice-bar { width: 120px; }
 
-  .voice-wave-gif {
-    height: 22px;
-    width: auto;
-    display: none;
-  }
+.voice-item[data-dur^="00:1"] .voice-bar { width: 160px; }
+.voice-item[data-dur^="00:2"] .voice-bar { width: 210px; }
+.voice-item[data-dur^="00:3"] .voice-bar { width: 260px; }
+.voice-item[data-dur^="00:4"] .voice-bar { width: 300px; }
+.voice-item[data-dur^="00:5"] .voice-bar { width: 340px; }
 
-  .voice-time {
-    font-size: 13px;
-    opacity: 0.8;
-  }
+.voice-text {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 15px;
+}
+.voice-wave-gif {
+  height: 22px;
+  width: auto;
+  display: none;
+}
+.voice-time {
+  font-size: 13px;
+  opacity: 0.8;
+}
+.voice-src {
+  display: none;
+}
 
-  .voice-src {
-    display: none;
-  }
+/* 主题切换按钮 */
+.theme-toggle-btn {
+  position: fixed;
+  top: 17px;
+  right: 70px;
+  z-index: 1000;
+  background: rgba(120, 120, 120, 0.5);
+  color: #fff;
+  border: 0;
+  border-radius: 12px;
+  padding: 4px 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.video-name {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* 底部从上到下 透明 → 半透黑 渐变 */
+  background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+  color: #fff;
+  border: none;
+  outline: none;
+  padding: 12px 10px 6px;
+  font-size: 13px;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  width: 100%;
+  text-align: left;
+  z-index: 6;
+}
+
+/* 首页全局搜索结果弹窗 */
+.search-result-pop {
+  position: fixed;
+  top: 58px;
+  left: 16px;
+  right: 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  z-index: 1001;
+  padding: 10px 0;
+  max-height: 60vh;
+  overflow-y: auto;
+  display: none;
+}
+.search-result-item {
+  padding: 10px 16px;
+  font-size: 14px;
+  color: var(--color-text);
+  cursor: pointer;
+  border-bottom: 1px solid rgba(34,197,94,0.1);
+}
+.search-result-item:hover {
+  background: var(--bg-input-focus);
+}
+.search-result-tip {
+  padding: 8px 16px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+/* 音频进度条圆点 → 绿色 */
+#bbcAudioProgress::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 10%;
+  background: #00d559;
+  cursor: pointer;
+}
+#bbcAudioProgress::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #00d559;
+  border: none;
+}
+
+/* 播放键去掉绿色背景 */
+#bbcPlayBtn {
+  background: transparent !important;
+  color: var(--color-text);
+  border: 1px solid var(--color-text);
+}
 </style>
 </head>
 <body>
@@ -629,7 +855,7 @@
   <div class="modal-title" id="modalWord">word</div>
   <div class="modal-phonetic" id="modalPhonetic">/wɜːd/</div>
   <div class="modal-meaning" id="modalMeaning">n. 单词；话语</div>
-  <div style="display:flex;justify-content:space-between;color:#fff">
+  <div style="display:flex;justify-content:space-between;color:var(--color-text)">
     <div id="modalPos">n.</div>
     <div class="modal-star" id="modalStar">⭐</div>
   </div>
@@ -638,6 +864,9 @@
 
 <div class="word-popup" id="wordPopup"></div>
 
+<!-- 主题切换按钮 -->
+<button class="theme-toggle-btn" id="themeToggle">🌞</button>
+
 <div id="mainPage" class="page active">
   <div class="header">
     <img src="logo.jpg" class="logo">
@@ -645,7 +874,11 @@
   </div>
 
   <div class="search-box">
-    <input class="search-input" type="text" placeholder="Wang Yibo 酷盖">
+    <input id="mainSearchInput" class="search-input" type="text" 
+    placeholder="搜索单词/字幕/视频"
+    autocomplete="off"
+    onkeydown="if(event.key==='Enter') globalSearch()">
+    <div class="search-result-pop" id="searchResultPop"></div>
   </div>
 
   <div class="nav">
@@ -672,27 +905,18 @@
 
   <div class="section-title" id="mainTitle">Yibo语音</div>
 
-  <div class="voice-list" id="voiceList">
-    <div class="voice-item">
-     <img class="voice-avatar" src="logo.jpg">
-     <div class="voice-bar" onclick="playThisVoice(this)">
-        <div class="voice-text">
-          <img class="voice-wave-gif" src="voice-wave.gif" alt="播放中">
-        </div>
-        <div class="voice-time">00:10</div>
-      </div>
-      <audio class="voice-src" src="voice1.mp3">
-    </div>
-  </div>
-
   <div id="adminVoiceForm" style="display:none; padding:10px 16px; border-top:1px solid rgba(34,197,94,0.2); margin-top:10px;">
-    <input type="text" id="voiceName" placeholder="语音名称：Yibo语音" style="width:100%;padding:8px;margin-bottom:5px;border-radius:8px;background:#333;color:#fff;border:0">
-    <input type="text" id="voiceTime" placeholder="时长：00:15" style="width:100%;padding:8px;margin-bottom:5px;border-radius:8px;background:#333;color:#fff;border:0">
-    <input type="text" id="voiceFile" placeholder="音频：voice1.mp3" style="width:100%;padding:8px;margin-bottom:5px;border-radius:8px;background:#333;color:#fff;border:0">
-    <button onclick="addVoiceBar()" style="width:100%;background:#66cc66;color:#fff;padding:8px;border-radius:8px;border:0">添加语音条</button>
+    <input type="text" id="voiceName" placeholder="语音名称：Yibo英语" style="width:100%;padding:8px;margin-bottom:5px;border-radius:8px;background:var(--bg-input);color:var(--color-text);border:0">
+    <input type="text" id="voiceTime" placeholder="时长：00:15" style="width:100%;padding:8px;margin-bottom:5px;border-radius:8px;background:var(--bg-input);color:var(--color-text);border:0">
+    <input type="text" id="voiceFile" placeholder="音频：voice1.mp3" style="width:100%;padding:8px;margin-bottom:5px;border-radius:8px;background:var(--bg-input);color:var(--color-text);border:0">
+    <button onclick="addVoiceBar()" style="width:100%;background:#00953d;color:#fff;padding:8px;border-radius:8px;border:0">添加语音条</button>
   </div>
 
-  <button id="adminToggleBtn" style="position:fixed;top:17px;right:16px;z-index:1000;background:#66cc66;color:#000;border:0;border-radius:12px;padding:4px 10px;font-size:12px;">
+  <div class="voice-list" id="voiceList">
+  </div>
+
+  <button id="adminToggleBtn" style="position: fixed;top: 17px;right: 16px;z-index: 1000;background: rgba(150,150,150,0.4);color: var(--color-text);border: 0;border-radius: 12px;
+  padding: 4px 10px;font-size: 12px;transition: all 0.2s;">
     管理
   </button>
 </div>
@@ -707,29 +931,13 @@
   <div class="search-box">
     <input class="search-input" placeholder="搜索视频">
   </div>
-  <div class="add-video-form">
+  <div id="dramaAddForm" class="add-video-form" style="display:none;">
     <input type="text" id="imgName" placeholder="缩略图：exploring1_1.jpg">
     <input type="text" id="videoName" placeholder="视频：exploring1_1.mp4">
     <input type="text" id="videoTitle" placeholder="视频名称">
     <button class="add-video-btn" onclick="addNewVideoCard()">一键新增视频</button>
   </div>
   <div class="video-grid" id="mindVideoList">
-    <div class="video-item">
-      <div class="video-card" onclick="openVideo('exploring1_1.mp4')">
-        <div class="video-del-btn" onclick="deleteVideo(event,this)">×</div>
-        <img src="exploring1_1.jpg" class="video-card-img">
-        <div class="video-card-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-      </div>
-      <input class="video-name" type="text" value="视频 1">
-    </div>
-    <div class="video-item">
-      <div class="video-card" onclick="openVideo('exploring1_2.mp4')">
-        <div class="video-del-btn" onclick="deleteVideo(event,this)">×</div>
-        <img src="exploring1_2.jpg" class="video-card-img">
-        <div class="video-card-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-      </div>
-      <input class="video-name" type="text" value="视频 2">
-    </div>
   </div>
 </div>
 
@@ -737,12 +945,13 @@
   <div class="secondary-header">
     <div class="secondary-title">China GT</div>
     <div class="header-back-btn" onclick="showPage('mainPage')">
-      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6 1.4 1.4-4.6 4.6 4.6 4.6z"/></svg></div>
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6 1.4 1.4-4.6 4.6 4.6 4.6z"/></svg>
+    </div>
   </div>
   <div class="search-box">
     <input class="search-input" placeholder="搜索视频">
   </div>
-  <div class="add-video-form">
+  <div id="gtAddForm" class="add-video-form" style="display:none;">
     <input type="text" id="imgNameGt" placeholder="缩略图：gt1_1.jpg">
     <input type="text" id="videoNameGt" placeholder="视频：gt1_1.mp4">
     <input type="text" id="videoTitleGt" placeholder="视频名称">
@@ -826,7 +1035,7 @@
     <div class="header-back-btn" onclick="showPage('oilPage')">
       <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6 1.4 1.4-4.6 4.6 4.6 4.6z"/></svg></div>
   </div>
-  <div style="text-align:center;padding:16px;color:#fff;">我收藏的单词</div>
+  <div style="text-align:center;padding:16px;color:var(--color-text);">我收藏的单词</div>
   <div id="collectedList"></div>
 </div>
 
@@ -836,7 +1045,7 @@
     <div class="header-back-btn" onclick="showPage('oilPage')">
       <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6 1.4 1.4-4.6 4.6 4.6 4.6z"/></svg></div>
   </div>
-  <div style="text-align:center;padding:16px;color:#fff;">我收藏的字幕句子</div>
+  <div style="text-align:center;padding:16px;color:var(--color-text);">我收藏的字幕句子</div>
   <div id="practiceList"></div>
 </div>
 
@@ -844,32 +1053,93 @@
   <div class="secondary-header">
     <div class="secondary-title">ibo</div>
     <div class="header-back-btn" onclick="showPage('mainPage')">
-      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6 1.4 1.4-4.6 4.6 4.6 4.6z"/></svg></div>
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6 1.4 1.4-4.6 4.6 4.6 4.6z"/></svg>
+    </div>
   </div>
+
   <div class="ibo-card">
+    <!-- 头像 -->
     <img src="logo.jpg" class="ibo-avatar" id="avatarPreview" onclick="document.getElementById('avatarInput').click()">
-    <input type="file" id="avatarInput" class="avatarInput" accept="image/*">
-    <input type="text" class="ibo-name" value="Wang Yibo" id="iboName">
-    <div style="margin-top:8px;font-size:12px;color:#ccc">点击头像可更换 | 点击名字可修改</div>
+    <input type="file" id="avatarInput" class="avatar-input" accept="image/*">
+
+    <!-- 昵称 -->
+    <input type="text" class="ibo-name" id="iboName" placeholder="请输入昵称">
+
+    <!-- 个性签名 新增 -->
+    <input type="text" class="ibo-sign" id="iboSign" placeholder="填写个性签名">
+
+    <!-- 说明文字 -->
+    <div class="ibo-desc">点击头像更换 | 编辑昵称和签名自动保存</div>
   </div>
 </div>
 
 <div id="bbcPage" class="page">
   <div class="secondary-header">
-    <div class="secondary-title">BBC NEWS</div>
+    <div class="secondary-title">Yibo NEWS</div>
     <div class="header-back-btn" onclick="showPage('mainPage')">
       <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6 1.4 1.4-4.6 4.6 4.6 4.6z"/></svg></div>
   </div>
-  <div style="padding:20px;color:#fff;text-align:center">即将上线</div>
+
+  <!-- 管理表单（新增音频地址输入） -->
+  <div id="bbcNewsForm" style="display:none; padding:12px 16px;">
+    <input type="text" id="bbcArticleName" placeholder="文章名称" style="width:100%;padding:8px;margin-bottom:8px;border-radius:8px;background:var(--bg-input);color:var(--color-text);border:1px solid rgba(34,197,94,0.3);">
+    <input type="text" id="bbcUpdateTime" placeholder="日期 例：2025-12-25" style="width:100%;padding:8px;margin-bottom:8px;border-radius:8px;background:var(--bg-input);color:var(--color-text);border:1px solid rgba(34,197,94,0.3);">
+    <input type="text" id="bbcImageName" placeholder="缩略图：thumbnail_1.jpg" style="width:100%;padding:8px;margin-bottom:8px;border-radius:8px;background:var(--bg-input);color:var(--color-text);border:1px solid rgba(34,197,94,0.3);">
+    <input type="text" id="bbcBannerImage" placeholder="详情Banner：news_1.jpg" style="width:100%;padding:8px;margin-bottom:8px;border-radius:8px;background:var(--bg-input);color:var(--color-text);border:1px solid rgba(34,197,94,0.3);">
+    <input type="text" id="bbcAudioSrc" placeholder="音频：audio_1.mp3" style="width:100%;padding:8px;margin-bottom:8px;border-radius:8px;background:var(--bg-input);color:var(--color-text);border:1px solid rgba(34,197,94,0.3);">
+    <textarea id="bbcContent" placeholder="文章内容" style="width:100%;padding:8px;margin-bottom:8px;border-radius:8px;background:var(--bg-input);color:var(--color-text);border:1px solid rgba(34,197,94,0.3);min-height:80px;resize:vertical;"></textarea>
+    <button onclick="addBbcNews()" style="width:100%;background:#00953d;color:#fff;padding:9px;border-radius:8px;border:none;">添加 NEWS</button>
+  </div>
+
+  <!-- 列表页 -->
+  <div id="bbcNewsList" style="padding:10px 16px; display:flex; flex-direction:column; gap:12px;"></div>
 </div>
 
-<div class="tabbar">
-  <div class="tab active" onclick="showPage('mainPage')">首页</div>
-  <div class="tab" onclick="showPage('oilPage')">加油站</div>
-  <div class="tab" onclick="showPage('iboPage')">ibo</div>
+<!-- 三级详情页（参考你给的版式） -->
+<div id="bbcDetailPage" class="page">
+  <div class="secondary-header">
+    <div class="secondary-title">NEWS 详情</div>
+    <div class="header-back-btn" onclick="stopBbcAudioAndBack()">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6 1.4 1.4-4.6 4.6 4.6 4.6z"/></svg></div>
+  </div>
+
+  <!-- 1. 顶部Banner大图 -->
+  <div style="padding:0 16px 10px;">
+    <div style="width:100%; aspect-ratio:16/9; border-radius:14px; overflow:hidden;">
+      <img id="bbcDetailBanner" src="" alt="news banner" style="width:100%;height:100%;object-fit:cover;display:block;">
+    </div>
+  </div>
+
+  <!-- 2. 中间文章内容（可滚动，底部给音频留空间） -->
+  <div style="padding:10px 16px 120px; line-height:1.8; font-size:16px; color:var(--color-text);">
+    <div id="bbcDetailTitle" style="font-size:22px; font-weight:bold; color:#00953d; margin-bottom:8px;"></div>
+    <div id="bbcDetailMeta" style="font-size:13px; color:var(--color-text-secondary); margin-bottom:16px; display:flex; gap:12px;">
+      <span id="bbcDetailTime"></span>
+    </div>
+    <hr style="border:0; border-top:1px solid rgba(34,197,94,0.2); margin-bottom:16px;">
+    <div id="bbcDetailContent" style="white-space:pre-wrap;"></div>
+  </div>
+
+  <!-- 3. 底部音频播放器（固定到底部） -->
+  <div style="position:fixed; bottom:0; left:0; right:0; background:var(--bg-tabbar); border-top:1px solid rgba(34,197,94,0.3); padding:12px 16px 16px; padding-bottom: env(safe-area-inset-bottom); z-index:99;">
+    <audio id="bbcAudioPlayer" preload="metadata"></audio>
+
+    <div style="display:flex; align-items:center; gap:12px; margin-top:8px;">
+      <span id="bbcAudioCurrent" style="font-size:14px; color:var(--color-text-secondary); width:40px;">00:00</span>
+      <input type="range" id="bbcAudioProgress" min="0" max="100" value="0" style="flex:1; height:1px; border-radius:2px; background:var(--border-color); -webkit-appearance:none; outline:none;">
+      <span id="bbcAudioDuration" style="font-size:14px; color:var(--color-text-secondary); width:40px;">00:00</span>
+    </div>
+
+    <div style="display:flex; justify-content:space-around; align-items:center; margin-top:10px;">
+      <button onclick="bbcSkip(-5)" style="width:34px; height:34px; border-radius:50%; background:transparent; color:var(--color-text); border:0.5px solid var(--color-text-secondary); font-size:10px;">-5s</button>
+      <button id="bbcPlayBtn" onclick="toggleBbcAudio()" style="width:50px; height:50px; border-radius:50%; background:#00953d; color:#fff; border:none; font-size:24px; display:grid; place-items:center;">▶</button>
+      <button onclick="bbcSkip(5)" style="width:34px; height:34px; border-radius:50%; background:transparent; color:var(--color-text); border:0.5px solid var(--color-text-secondary); font: size 10px;px;">+5s</button>
+</div>
+  </div>
 </div>
 
 <script>
+let lastPageBeforeVideo = "mainPage";
 const video = document.getElementById("videoPlayer");
 const subtitleList = document.getElementById("subtitleList");
 const subtitleContainer = document.getElementById("subtitleContainer");
@@ -885,16 +1155,36 @@ let cet4Words = {}, cet6Words = {};
 
 let allSubtitlesCache = JSON.parse(localStorage.getItem('allSubtitlesCache') || '[]');
 
+// 主题切换核心功能
+function initTheme() {
+  const themeBtn = document.getElementById('themeToggle');
+  const isLight = localStorage.getItem('lightMode') === 'true';
+  
+  if (isLight) {
+    document.documentElement.classList.add('light');
+    themeBtn.textContent = '🌙';
+  } else {
+    themeBtn.textContent = '🌞';
+  }
+
+  themeBtn.onclick = function() {
+    const isLightNow = document.documentElement.classList.toggle('light');
+    localStorage.setItem('lightMode', isLightNow);
+    // 切换图标
+    this.textContent = isLightNow ? '🌙' : '🌞';
+  };
+}
+
 async function loadWordLibrary() {
   try {
     cet4Words = await fetch("cet4.json").then(r => r.json());
     cet6Words = await fetch("cet6.json").then(r => r.json());
-    let ielts = await fetch("ielts.json").then(r => r.json());
+    let vocabulary = await fetch("vocabulary.json").then(r => r.json());
 
     let allWords = {};
     for (let w in cet4Words) allWords[w] = { ...cet4Words[w], type: "cet4" };
     for (let w in cet6Words) allWords[w] = { ...cet6Words[w], type: "cet6" };
-    for (let w in ielts) allWords[w] = { ...ielts[w], type: "ielts" };
+    for (let w in vocabulary) allWords[w] = { ...vocabulary[w], type: "vocabulary" };
     wordLibrary = allWords;
 
     renderCet4List();
@@ -910,31 +1200,27 @@ async function loadWordLibrary() {
 }
 
 let sortedCet4 = [];
-
 function renderCet4List() {
   const list = document.getElementById("cet4WordList");
   sortedCet4 = Object.keys(cet4Words).sort((a, b) => a.localeCompare(b));
-  
   let html = "";
   for (let w of sortedCet4) {
     const d = cet4Words[w];
     html += `
     <div class="word-card" onclick="showWordInfo('${w}','${d.phonetic}','${d.meaning}','${d.pos}')">
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-        <span style="font-weight:bold;color:#66cc66;">${w}</span>
-        <span style="color:#ff9500;">${d.phonetic || ''}</span>
+        <span style="font-weight:bold;color:#00953d;">${w}</span>
+        <span style="color:#90ee90;">${d.phonetic || ''}</span>
         <span style="background:rgba(34,197,94,0.2);padding:2px 6px;border-radius:10px;font-size:12px;">${d.pos || ''}</span>
-        <span style="color:#eee;flex:1;margin-left:4px;">${d.meaning || ''}</span>
+        <span style="color:var(--color-text-eee);flex:1;margin-left:4px;">${d.meaning || ''}</span>
       </div>
     </div>`;
   }
   list.innerHTML = html;
 }
-
 function filterCet4Words() {
   const keyword = document.getElementById("cet4Search").value.toLowerCase().trim();
   const list = document.getElementById("cet4WordList");
-  
   let html = "";
   for (let w of sortedCet4) {
     if (w.toLowerCase().includes(keyword) || cet4Words[w].meaning.includes(keyword)) {
@@ -942,10 +1228,10 @@ function filterCet4Words() {
       html += `
       <div class="word-card" onclick="showWordInfo('${w}','${d.phonetic}','${d.meaning}','${d.pos}')">
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-          <span style="font-weight:bold;color:#66cc66;">${w}</span>
-          <span style="color:#ffdd77;">${d.phonetic || ''}</span>
+          <span style="font-weight:bold;color:#00953d;">${w}</span>
+          <span style="color:##90ee90;">${d.phonetic || ''}</span>
           <span style="background:rgba(34,197,94,0.2);padding:2px 6px;border-radius:10px;font-size:12px;">${d.pos || ''}</span>
-          <span style="color:#eee;flex:1;margin-left:4px;">${d.meaning || ''}</span>
+          <span style="color:var(--color-text-eee);flex:1;margin-left:4px;">${d.meaning || ''}</span>
         </div>
       </div>`;
     }
@@ -954,32 +1240,27 @@ function filterCet4Words() {
 }
 
 let sortedCet6 = [];
-
 function renderCet6List() {
   const list = document.getElementById("cet6WordList");
-  
   sortedCet6 = Object.keys(cet6Words).sort((a, b) => a.localeCompare(b));
-  
   let html = "";
   for (let w of sortedCet6) {
     const d = cet6Words[w];
     html += `
     <div class="word-card word-card-cet6" onclick="showWordInfo('${w}','${d.phonetic}','${d.meaning}','${d.pos}')">
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-        <span style="font-weight:bold;color:#66cc66;">${w}</span>
-        <span style="color:#ff9500;">${d.phonetic || ''}</span>
+        <span style="font-weight:bold;color:#00953d;">${w}</span>
+        <span style="color:#90ee90;">${d.phonetic || ''}</span>
         <span style="background:rgba(34,197,94,0.2);padding:2px 6px;border-radius:10px;font-size:12px;">${d.pos || ''}</span>
-        <span style="color:#eee;flex:1;margin-left:4px;">${d.meaning || ''}</span>
+        <span style="color:var(--color-text-eee);flex:1;margin-left:4px;">${d.meaning || ''}</span>
       </div>
     </div>`;
   }
   list.innerHTML = html;
 }
-
 function filterCet6Words() {
   const keyword = document.getElementById("cet6Search").value.toLowerCase().trim();
   const list = document.getElementById("cet6WordList");
-  
   let html = "";
   for (let w of sortedCet6) {
     if (w.toLowerCase().includes(keyword) || cet6Words[w].meaning.includes(keyword)) {
@@ -987,10 +1268,10 @@ function filterCet6Words() {
       html += `
       <div class="word-card word-card-cet6" onclick="showWordInfo('${w}','${d.phonetic}','${d.meaning}','${d.pos}')">
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-          <span style="font-weight:bold;color:#66cc66;">${w}</span>
-          <span style="color:#ff9500;">${d.phonetic || ''}</span>
+          <span style="font-weight:bold;color:#00953d;">${w}</span>
+          <span style="color:#90ee90;">${d.phonetic || ''}</span>
           <span style="background:rgba(34,197,94,0.2);padding:2px 6px;border-radius:10px;font-size:12px;">${d.pos || ''}</span>
-          <span style="color:#eee;flex:1;margin-left:4px;">${d.meaning || ''}</span>
+          <span style="color:var(--color-text-eee);flex:1;margin-left:4px;">${d.meaning || ''}</span>
         </div>
       </div>`;
     }
@@ -1037,14 +1318,12 @@ function collectWord(word) {
     renderWordBook();
   }
 }
-
 function removeCollectedWord(word) {
   let list = getCollectedWords();
   list = list.filter(item => item.word !== word);
   setCollectedWords(list);
   renderWordBook();
 }
-
 function collectSentence(text) {
   const list = getPracticeSentences();
   const exists = list.some(item => item.text === text);
@@ -1064,45 +1343,63 @@ function removeSentence(text) {
 function renderWordBook() {
   const list = getCollectedWords();
   const el = document.getElementById('collectedList');
-
   el.innerHTML = list.map(item => {
     const word = item.word;
     const matched = allSubtitlesCache.filter(sub =>
       new RegExp(`\\b${word}\\b`, 'i').test(sub.en)
     );
-
     const senHtml = matched.length
       ? `<div class="wb-sentences">
-           <div class="wb-sentences-title">🔗 全站字幕中出现的句子（点击跳转）</div>
+           <div class="wb-sentences-title"></div>
            ${matched.map((sub, i) => `
              <div class="wb-sentence-item" onclick="openVideo('${sub.videoSrc}',${sub.time})">
-               ${i + 1}. ${sub.en}｜${sub.zh}
+                 ${sub.en}｜${sub.zh}
              </div>
            `).join('')}
          </div>`
       : '<div class="wb-sentences">暂无匹配句子</div>';
-
     return `
     <div class="word-book-item">
-      <div class="wb-word">${item.word}</div>
-      <div class="wb-phonetic">${item.phonetic || ''}</div>
-      <div class="wb-pos">${item.pos || ''}</div>
-      <div class="wb-meaning">${item.meaning || ''}</div>
+      <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+        <span style="font-weight:bold;color:#00953d;">${item.word}</span>
+        <span style="color:#90ee90;">${item.phonetic || ''}</span>
+        <span style="background:rgba(34,197,94,0.2);padding:2px 6px;border-radius:10px;font-size:12px;">${item.pos || ''}</span>
+        <span style="color:var(--color-text);flex:1;">${item.meaning || ''}</span>
+        <button class="unfav-btn" onclick="removeCollectedWord('${item.word}')" style="margin:0;">取消</button>
+      </div>
       ${senHtml}
-      <button class="unfav-btn" onclick="removeCollectedWord('${item.word}')">取消收藏</button>
     </div>`;
   }).join('');
 }
-
 function renderPractice() {
   const list = getPracticeSentences();
   const el = document.getElementById('practiceList');
-  el.innerHTML = list.map((item, idx) => `
-    <div class="practice-item">
-      ${idx + 1}. ${item.text}
-      <button class="unfav-btn" onclick="removeSentence(\`${item.text}\`)" style="margin-top:8px;">取消收藏</button>
+  
+  const reversedList = list.slice().reverse();
+  
+  el.innerHTML = reversedList.map((item, idx) => {
+    const [en, zh] = item.text.split('｜');
+    return `
+    <div class="practice-item" style="position:relative; padding-right:40px; line-height:1.7;">
+      <!-- 英文行 -->
+      <div style="color:#00953d; font-weight:500; font-size:15px;">
+        ${en || ''}
+      </div>
+      <!-- 中文行 单独一行 白色字体 -->
+      <div style="color:#ffffff; font-size:14px; margin-top:6px;">
+        ${zh || ''}
+      </div>
+      
+      <!-- 取消按钮换成空心五角星 替代X -->
+      <div onclick="removeSentence(\`${item.text}\`)" 
+           style="position:absolute; right:10px; top:12px;
+                  font-size:20px; color:#999;
+                  cursor:pointer;">
+        ☆
+      </div>
     </div>
-  `).join('');
+  `;
+  }).join('');
 }
 
 function parseVttTime(str){
@@ -1129,7 +1426,6 @@ function parseVtt(text){
   }
   return res;
 }
-
 async function loadSubtitle(videoSrc){
   const subSrc = videoSrc.replace('.mp4','.vtt');
   try{
@@ -1137,7 +1433,6 @@ async function loadSubtitle(videoSrc){
     if(!res.ok) throw 'no sub';
     const text = await res.text();
     subtitles = parseVtt(text);
-
     subtitles.forEach(sub => {
       sub.videoSrc = videoSrc;
       const exists = allSubtitlesCache.some(
@@ -1146,15 +1441,51 @@ async function loadSubtitle(videoSrc){
       if (!exists) allSubtitlesCache.push(sub);
     });
     localStorage.setItem('allSubtitlesCache', JSON.stringify(allSubtitlesCache));
-
     renderSubtitles();
   }catch(e){
-    subtitleList.innerHTML = '<div style="text-align:center;padding:20px;color:#fff">暂无对应VTT字幕</div>';
+    subtitleList.innerHTML = '<div style="text-align:center;padding:20px;color:var(--color-text);">暂无对应VTT字幕</div>';
     subtitles = [];
   }
 }
 
+function renderDramaVideos() {
+  const list = JSON.parse(localStorage.getItem('dramaVideos') || '[]');
+  const container = document.getElementById('mindVideoList');
+  let html = ``; // 空白，无内置视频
+  list.forEach(item => {
+    html += `
+    <div class="video-item">
+      <div class="video-card" onclick="openVideo('${item.vid}')">
+        <div class="video-del-btn" onclick="deleteVideo(event,this)">×</div>
+        <img src="${item.img}" class="video-card-img">
+        <div class="video-card-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+      </div>
+      <input class="video-name" type="text" value="${item.title}" onblur="saveDramaVideoName(this, '${item.vid}')">
+    </div>`;
+  });
+  container.innerHTML = html;
+}
+
+function renderGTVideos() {
+  const list = JSON.parse(localStorage.getItem('gtVideos') || '[]');
+  const container = document.getElementById('gtVideoList');
+  let html = ``; // 空白，无内置视频
+  list.forEach(item => {
+    html += `
+    <div class="video-item">
+      <div class="video-card" onclick="openVideo('${item.vid}')">
+        <div class="video-del-btn" onclick="deleteVideo(event,this)">×</div>
+        <img src="${item.img}" class="video-card-img">
+        <div class="video-card-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+      </div>
+      <input class="video-name" type="text" value="${item.title}" onblur="saveGTVideoName(this, '${item.vid}')">
+    </div>`;
+  });
+  container.innerHTML = html;
+}
+
 window.onload = async function () {
+  initTheme();
   await loadWordLibrary();
   renderWordBook();
   renderPractice();
@@ -1170,29 +1501,63 @@ window.onload = async function () {
   
   modalOverlay.onclick = closeWordModal;
 
-  // 自动加载语音 + 视频
   renderVoiceList();
   renderDramaVideos();
   renderGTVideos();
+
+  // ====== 加这一行 ======
+  renderBbcNews();
+
+  document.addEventListener('touchstart', function(e) {
+    let timer = setTimeout(() => {
+      e.target.dispatchEvent(new Event('longpress'));
+    }, 600);
+    e.target.addEventListener('touchend', () => clearTimeout(timer), { once: true });
+  });
+
+  // ========== 新增：加载本地保存的头像、昵称、签名 ==========
+  loadUserProfile();
+  // 绑定昵称、签名输入框自动保存
+  bindProfileInputSave();
 };
 
 function renderSubtitles() {
   subtitleList.innerHTML = "";
   if(!subtitles.length) return;
   const practice = getPracticeSentences();
-  
   subtitles.forEach((item, index) => {
     let enHtml = item.en;
+    let zhHtml = item.zh;
+
     Object.keys(wordLibrary).forEach(word => {
       const info = wordLibrary[word];
-      let className = '';
-      if(info.type === 'cet4') className = 'word-cet4';
-      if(info.type === 'cet6') className = 'word-cet6';
-      if(info.type === 'ielts') className = 'word-ielts';
-      const reg = new RegExp(`\\b${word}\\b`, "gi");
-      enHtml = enHtml.replace(reg, `<span class="${className}" data-word="${word.toLowerCase()}">$&</span>`);
-    });
+      let enClass = '';
+      let zhClass = '';
+      if(info.type === 'cet4') {
+        enClass = 'word-cet4';
+        zhClass = 'zh-cet4';
+      }
+      if(info.type === 'cet6') {
+        enClass = 'word-cet6';
+        zhClass = 'zh-cet6';
+      }
+      if(info.type === 'vocabulary') {
+        enClass = 'word-vocabulary';
+        zhClass = 'zh-vocabulary';
+      }
 
+      const regEn = new RegExp(`\\b${word}\\b`, "gi");
+      enHtml = enHtml.replace(regEn, `<span class="${enClass}" data-word="${word.toLowerCase()}">$&</span>`);
+
+      if(info.meaning){
+        const meanArr = info.meaning.split(/[,，；;]/).map(m=>m.trim());
+        meanArr.forEach(mean=>{
+          if(!mean) return;
+          const regZh = new RegExp(mean, "g");
+          zhHtml = zhHtml.replace(regZh, `<span class="${zhClass}">$&</span>`);
+        });
+      }
+    });
     const text = item.en + ' ' + item.zh;
     const isCollected = practice.some(p => p.text === text);
     const div = document.createElement("div");
@@ -1201,12 +1566,11 @@ function renderSubtitles() {
     div.innerHTML = `
       <button class="star-fav ${isCollected ? 'active' : ''}">★</button>
       <div class="sub-en">${enHtml}</div>
-      <div class="sub-zh">${item.zh}</div>
+      <div class="sub-zh">${zhHtml}</div>
     `;
     subtitleList.appendChild(div);
   });
 }
-
 function syncSubtitles() {
   const now = video.currentTime;
   for (let i = 0; i < subtitles.length; i++) {
@@ -1218,40 +1582,41 @@ function syncSubtitles() {
     }
   }
 }
-
 function setActive(index) {
   const items = document.querySelectorAll(".subtitle-item");
   const list = document.getElementById("subtitleList");
-
   items.forEach((item, i) => {
     item.classList.remove("active", "played");
     if (i === index) item.classList.add("active");
     if (i < index) item.classList.add("played");
   });
-
   if (items[index]) {
     list.scrollTop = items[index].offsetTop - 120;
   }
-
   currentSubIndex = index;
 }
-
 function jumpToSubtitle(index) {
   if (subtitles[index]) {
     video.currentTime = subtitles[index].time;
     video.play();
   }
 }
-
 function openVideo(src, time = 0) {
+  // 记录进入视频前所在页面
+  lastPageBeforeVideo = document.querySelector('.page.active').id;
+
   showPage('videoPage');
   video.src = src;
   video.currentTime = time;
   video.play().catch(() => { });
-  resetSubtitleState();
-  loadSubtitle(src);
-}
 
+  // 先加载字幕，加载完成后自动跳转到对应句子
+  loadSubtitle(src).then(() => {
+    if (time > 0 && subtitles.length > 0) {
+      jumpToTimeSubtitle(time);
+    }
+  });
+}
 function resetSubtitleState() {
   currentSubIndex = -1;
   document.querySelectorAll(".subtitle-item").forEach(el => {
@@ -1261,17 +1626,24 @@ function resetSubtitleState() {
 }
 
 document.addEventListener("click", e => {
-  if (e.target.classList.contains("word-cet4") || e.target.classList.contains("word-cet6") || e.target.classList.contains("word-ielts")) {
+  if (e.target.classList.contains("word-cet4") || e.target.classList.contains("word-cet6") || e.target.classList.contains("word-vocabulary")) {
     const word = e.target.dataset.word;
     const info = wordLibrary[word];
     if (!info) return;
-    wordPopup.style.display = "block";
-    const rect = e.target.getBoundingClientRect();
-    let left = Math.max(10, rect.left);
-    let top = rect.bottom + 10;
-    if (left + 240 > window.innerWidth) left = window.innerWidth - 250;
-    wordPopup.style.left = left + "px";
-    wordPopup.style.top = top + "px";
+        wordPopup.style.display = "block";
+    // 关键：挂靠在当前单词元素后面
+    e.target.appendChild(wordPopup);
+    // 重置位置，紧贴单词正下方
+    wordPopup.style.left = "0px";
+    wordPopup.style.top = "8px";
+    // 防止超出屏幕右侧自动靠左
+    setTimeout(() => {
+      const popRect = wordPopup.getBoundingClientRect();
+      if(popRect.right > window.innerWidth){
+        let offset = popRect.right - window.innerWidth + 10;
+        wordPopup.style.left = -offset + "px";
+      }
+    },0);
     wordPopup.innerHTML = `
       <p class="word-text">${word}</p>
       <p>释义：${info.meaning}</p>
@@ -1309,9 +1681,9 @@ function stopVideoAndBack() {
   video.pause();
   video.currentTime = 0;
   document.getElementById('videoBox').classList.remove('playing');
-  showPage('dramaPage');
+  // 退回进入视频前的原页面
+  showPage(lastPageBeforeVideo);
 }
-
 function showPage(id) {
   document.querySelectorAll('.page').forEach(p => {
     p.classList.remove('active');
@@ -1319,11 +1691,14 @@ function showPage(id) {
   setTimeout(() => {
     document.getElementById(id).classList.add('active');
   }, 50);
-  
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   if (id === 'mainPage') document.querySelectorAll('.tab')[0].classList.add('active');
   if (id.includes('oil') || id.includes('cet') || id.includes('word') || id.includes('practice')) document.querySelectorAll('.tab')[1].classList.add('active');
   if (id === 'iboPage') document.querySelectorAll('.tab')[2].classList.add('active');
+
+    // 控制主题按钮只在首页显示
+  const themeBtn = document.getElementById('themeToggle');
+  themeBtn.style.display = id === 'mainPage' ? 'block' : 'none';
 }
 
 function addNewVideoCard() {
@@ -1331,13 +1706,10 @@ function addNewVideoCard() {
   const vid = document.getElementById('videoName').value.trim();
   const title = document.getElementById('videoTitle').value.trim() || '新视频';
   if (!img || !vid) return;
-
   let list = JSON.parse(localStorage.getItem('dramaVideos') || '[]');
   list.push({ img, vid, title });
   localStorage.setItem('dramaVideos', JSON.stringify(list));
-
   renderDramaVideos();
-
   document.getElementById('imgName').value = '';
   document.getElementById('videoName').value = '';
   document.getElementById('videoTitle').value = '';
@@ -1345,19 +1717,14 @@ function addNewVideoCard() {
 function deleteVideo(e, btn) {
   e.stopPropagation();
   if (!confirm('确定删除？')) return;
-
   const item = btn.closest('.video-item');
   const vidSrc = item.querySelector('.video-card').getAttribute('onclick').match(/'(.+?)'/)[1];
-
-  // 从本地存储删除
   let dramaList = JSON.parse(localStorage.getItem('dramaVideos') || '[]');
   dramaList = dramaList.filter(v => v.vid !== vidSrc);
   localStorage.setItem('dramaVideos', JSON.stringify(dramaList));
-
   let gtList = JSON.parse(localStorage.getItem('gtVideos') || '[]');
   gtList = gtList.filter(v => v.vid !== vidSrc);
   localStorage.setItem('gtVideos', JSON.stringify(gtList));
-
   item.remove();
 }
 
@@ -1381,7 +1748,6 @@ function closeWordModal() {
   document.getElementById('wordModal').style.display = 'none';
   document.getElementById('modalOverlay').style.display = 'none';
 }
-
 document.getElementById('modalStar').onclick = function () {
   const word = document.getElementById('modalWord').innerText;
   collectWord(word);
@@ -1391,12 +1757,10 @@ document.getElementById('modalStar').onclick = function () {
 let bannerSwiper = document.getElementById('bannerSwiper');
 let bannerIndex = 0;
 const bannerTotal = bannerSwiper?.querySelectorAll('.banner-card').length || 0;
-
 function autoBannerRoll() {
   if (bannerTotal <= 1) return;
   bannerIndex++;
   if (bannerIndex >= bannerTotal) bannerIndex = 0;
-  // 👇 去掉+10，按100%宽度滚动
   const cardWidth = bannerSwiper.querySelector('.banner-card').offsetWidth;
   bannerSwiper.scrollTo({
     left: cardWidth * bannerIndex,
@@ -1412,110 +1776,512 @@ function addNewVideoCardGT() {
   const vid = document.getElementById('videoNameGt').value.trim();
   const title = document.getElementById('videoTitleGt').value.trim() || '新视频';
   if (!img || !vid) return;
-
   let list = JSON.parse(localStorage.getItem('gtVideos') || '[]');
   list.push({ img, vid, title });
   localStorage.setItem('gtVideos', JSON.stringify(list));
-
   renderGTVideos();
-
   document.getElementById('imgNameGt').value = '';
   document.getElementById('videoNameGt').value = '';
   document.getElementById('videoTitleGt').value = '';
 }
 
 function playThisVoice(el) {
-  document.querySelectorAll('.voice-src').forEach(audio => {
-    audio.pause();
-    audio.currentTime = 0;
-  });
-  document.querySelectorAll('.voice-wave-gif').forEach(gif => {
-    gif.style.display = 'none';
-  });
-
   const item = el.closest('.voice-item');
   const audio = item.querySelector('.voice-src');
   const gif = item.querySelector('.voice-wave-gif');
+  const time = item.querySelector('.voice-time');
 
-  audio.play();
-  gif.style.display = 'inline-block';
-
-  audio.onended = () => {
+  // 如果当前正在播放 → 再次点击暂停
+  if (!audio.paused) {
+    audio.pause();
     gif.style.display = 'none';
+    time.style.display = 'block';
+    return;
+  }
+
+  // 先暂停其他所有语音
+  document.querySelectorAll('.voice-src').forEach(a => {
+    a.pause();
+    a.currentTime = 0;
+  });
+  document.querySelectorAll('.voice-wave-gif').forEach(g => g.style.display = 'none');
+  document.querySelectorAll('.voice-time').forEach(t => t.style.display = 'block');
+
+  // 播放当前
+  audio.play().catch(err => console.log('播放异常:', err));
+  gif.style.display = 'inline-block';
+  time.style.display = 'none';
+
+  // 播放结束自动复原
+  audio.onended = function () {
+    gif.style.display = 'none';
+    time.style.display = 'block';
   };
 }
-
-// 保存语音到本地
 function addVoiceBar() {
-  let name = document.getElementById('voiceName').value || 'yibo语录';
+  let name = document.getElementById('voiceName').value || 'Yibo语音';
   let time = document.getElementById('voiceTime').value || '00:15';
   let file = document.getElementById('voiceFile').value || 'voice1.mp3';
-
   let list = JSON.parse(localStorage.getItem('voiceList') || '[]');
-  list.push({ name, time, file });
+ list.unshift({ name: '', time, file });
   localStorage.setItem('voiceList', JSON.stringify(list));
-
   renderVoiceList();
-
   document.getElementById('voiceName').value = '';
   document.getElementById('voiceTime').value = '';
   document.getElementById('voiceFile').value = '';
 }
 
-// 加载语音（刷新不丢）
 function renderVoiceList() {
   let list = JSON.parse(localStorage.getItem('voiceList') || '[]');
   let container = document.getElementById('voiceList');
-
-  let html = `
-  <!-- 默认语音 -->
-  <div class="voice-item">
-    <img class="voice-avatar" src="logo.jpg">
-    <div class="voice-bar" onclick="playThisVoice(this)">
-      <div class="voice-text">
-        <img class="voice-wave-gif" src="voice-wave.gif" alt="播放中">
-      </div>
-      <div class="voice-time">00:10</div>
-    </div>
-    <audio class="voice-src" src="voice1.mp3"></audio>
-  </div>
-  `;
-
+  let html = '';
   list.forEach(item => {
     html += `
-    <div class="voice-item">
+    <div class="voice-item" data-dur="${item.time}">
       <img class="voice-avatar" src="logo.jpg">
-      <div class="voice-bar" onclick="playThisVoice(this)">
+      <div class="voice-bar" onclick="playThisVoice(this)" style="position:relative;">
+        <span class="voice-del" onclick="event.stopPropagation();deleteVoice(this,'${item.file}')" 
+        style="display:none;position:absolute;right:-25px;top:50%;transform:translateY(-50%);
+        background:rgba(150,150,150,0.4);color:#fff;width:18px;height:18px;
+        border-radius:50%;font-size:12px;text-align:center;line-height:18px;">×</span>
         <div class="voice-text">
           <img class="voice-wave-gif" src="voice-wave.gif" alt="播放中">
         </div>
         <div class="voice-time">${item.time}</div>
       </div>
-      <audio class="voice-src" src="${item.file}"></audio>
+      <audio class="voice-src" src="${item.file}">
     </div>
     `;
   });
-
   container.innerHTML = html;
+}
+
+function deleteVoice(el, file) {
+  if (!adminMode) return;
+  if (!confirm('确定删除这条语音？')) return;
+  let list = JSON.parse(localStorage.getItem('voiceList') || '[]');
+  list = list.filter(x => x.file !== file);
+  localStorage.setItem('voiceList', JSON.stringify(list));
+  el.closest('.voice-item').remove();
 }
 
 const adminToggleBtn = document.getElementById('adminToggleBtn');
 const adminVoiceForm = document.getElementById('adminVoiceForm');
 let adminMode = false;
+// 只搜索四六级单词 纯净版 不破坏布局
+// 全局聚合搜索：单词 + 字幕 + 视频
+function globalSearch() {
+  const kw = document.getElementById('mainSearchInput').value.trim().toLowerCase();
+  const pop = document.getElementById('searchResultPop');
+  pop.innerHTML = '';
+
+  if (!kw) {
+    pop.style.display = 'none';
+    return;
+  }
+
+  let resultHtml = '';
+  let hasResult = false;
+
+  // 1. 搜四六级单词
+  let cet4Match = [];
+  for (let w in cet4Words) {
+    if (w.toLowerCase().includes(kw) || cet4Words[w].meaning.toLowerCase().includes(kw)) {
+      cet4Match.push(w);
+    }
+  }
+  let cet6Match = [];
+  for (let w in cet6Words) {
+    if (w.toLowerCase().includes(kw) || cet6Words[w].meaning.toLowerCase().includes(kw)) {
+      cet6Match.push(w);
+    }
+  }
+
+  if (cet4Match.length) {
+    resultHtml += '<div class="search-result-tip">📚 四级单词</div>';
+    cet4Match.forEach(w => {
+      hasResult = true;
+      resultHtml += `<div class="search-result-item" data-type="cet4" data-val="${w}">${w} — ${cet4Words[w].meaning}</div>`;
+    });
+  }
+  if (cet6Match.length) {
+    resultHtml += '<div class="search-result-tip">📚 六级单词</div>';
+    cet6Match.forEach(w => {
+      hasResult = true;
+      resultHtml += `<div class="search-result-item" data-type="cet6" data-val="${w}">${w} — ${cet6Words[w].meaning}</div>`;
+    });
+  }
+
+  // 2. 搜所有字幕句子
+  const subCache = JSON.parse(localStorage.getItem('allSubtitlesCache') || '[]');
+  const subMatch = subCache.filter(item => 
+    item.en.toLowerCase().includes(kw) || item.zh.includes(kw)
+  );
+  if (subMatch.length) {
+    resultHtml += '<div class="search-result-tip">🎬 字幕句子</div>';
+    subMatch.forEach(item => {
+      hasResult = true;
+      let text = item.en.length > 28 ? item.en.slice(0,28)+'...' : item.en;
+      resultHtml += `<div class="search-result-item" data-type="sub" data-src="${item.videoSrc}" data-time="${item.time}">${text}</div>`;
+    });
+  }
+
+  // 3. 搜视频标题
+  const dramaVideos = JSON.parse(localStorage.getItem('dramaVideos') || '[]');
+  const gtVideos = JSON.parse(localStorage.getItem('gtVideos') || '[]');
+  const allVideos = [...dramaVideos, ...gtVideos];
+  const videoMatch = allVideos.filter(v => v.title.toLowerCase().includes(kw));
+  if (videoMatch.length) {
+    resultHtml += '<div class="search-result-tip">📺 视频</div>';
+    videoMatch.forEach(v => {
+      hasResult = true;
+      resultHtml += `<div class="search-result-item" data-type="video" data-src="${v.vid}">${v.title}</div>`;
+    });
+  }
+
+  if (!hasResult) {
+    resultHtml += '<div class="search-result-tip">暂无匹配结果</div>';
+  }
+
+  pop.innerHTML = resultHtml;
+  pop.style.display = 'block';
+}
+
+// 点击搜索结果跳转逻辑
+document.addEventListener('click', function(e){
+  const popItem = e.target.closest('.search-result-item');
+  const popBox = document.getElementById('searchResultPop');
+  const input = document.getElementById('mainSearchInput');
+
+  // 点击结果项
+  if(popItem){
+    const type = popItem.dataset.type;
+    const val = popItem.dataset.val;
+    const src = popItem.dataset.src;
+    const time = parseFloat(popItem.dataset.time || 0);
+
+    if(type === 'cet4'){
+      window.searchTargetWord = val;
+      showPage('cet4Page');
+      setTimeout(scrollToSearchWord,150);
+    }else if(type === 'cet6'){
+      window.searchTargetWord = val;
+      showPage('cet6Page');
+      setTimeout(scrollToSearchWord,150);
+    }else if(type === 'sub'){
+      openVideo(src, time);
+    }else if(type === 'video'){
+      openVideo(src, 0);
+    }
+
+    popBox.style.display = 'none';
+    input.value = '';
+    return;
+  }
+
+  // 点击空白关闭弹窗
+  if(!popBox.contains(e.target) && e.target !== input){
+    popBox.style.display = 'none';
+  }
+});
+
+// 只滚动 + 加边框高亮，不改动原有HTML，绝不乱码
+function scrollToSearchWord() {
+  const target = window.searchTargetWord;
+  if (!target) return;
+
+  // 遍历所有单词卡片，匹配单词文本
+  const cards = document.querySelectorAll('.word-card');
+  cards.forEach(card => {
+    // 清除之前高亮样式
+    card.style.border = '';
+    card.style.boxShadow = '';
+
+    const wordText = card.querySelector('span[style*="color:#00953d"]')?.innerText || '';
+    if (wordText.toLowerCase() === target.toLowerCase()) {
+      // 高亮边框+阴影 不破坏布局
+      card.style.border = '2px solid #00723c';
+      card.style.boxShadow = '0 0 10px rgba(34,197,94,0.4)';
+      // 滚动到屏幕中间
+      card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  });
+}
 
 adminToggleBtn.onclick = function(){
   adminMode = !adminMode;
+  const adminVoiceForm = document.getElementById('adminVoiceForm');
+  const dramaAddForm = document.getElementById('dramaAddForm');
+  const gtAddForm = document.getElementById('gtAddForm');
+
   if(adminMode){
     adminVoiceForm.style.display = 'block';
-    this.innerText = '关闭管理';
+    dramaAddForm.style.display = 'block';
+    gtAddForm.style.display = 'block';
+    this.innerText = '关闭';
   }else{
     adminVoiceForm.style.display = 'none';
+    dramaAddForm.style.display = 'none';
+    gtAddForm.style.display = 'none';
     this.innerText = '管理';
   }
-  // 强制保持透明灰色，永远不变色
-  this.style.background = 'rgba(255,255,255,0.12)';
-  this.style.color = '#dddddd';
+  document.querySelectorAll('.voice-del, .video-del-btn').forEach(btn=>{
+    btn.style.display=adminMode?'grid':'none';
+  });
+  
+  // ====== 加这一行 ======
+  syncBbcAdminDisplay();
 };
+
+// 保存探索心境视频名称
+function saveDramaVideoName(inputEl, videoSrc) {
+  let newTitle = inputEl.value.trim();
+  let list = JSON.parse(localStorage.getItem('dramaVideos') || '[]');
+  list = list.map(item => {
+    if (item.vid === videoSrc) {
+      item.title = newTitle;
+    }
+    return item;
+  });
+  localStorage.setItem('dramaVideos', JSON.stringify(list));
+}
+
+// 保存China GT视频名称
+function saveGTVideoName(inputEl, videoSrc) {
+  let newTitle = inputEl.value.trim();
+  let list = JSON.parse(localStorage.getItem('gtVideos') || '[]');
+  list = list.map(item => {
+    if (item.vid === videoSrc) {
+      item.title = newTitle;
+    }
+    return item;
+  });
+  localStorage.setItem('gtVideos', JSON.stringify(list));
+}
+
+// 加载用户资料：头像base64、昵称、个性签名
+function loadUserProfile() {
+  // 头像
+  const saveAvatar = localStorage.getItem('iboAvatar');
+  if (saveAvatar) {
+    document.getElementById('avatarPreview').src = saveAvatar;
+  }
+  // 昵称
+  const saveName = localStorage.getItem('iboName');
+  if (saveName) {
+    document.getElementById('iboName').value = saveName;
+  }
+  // 个性签名
+  const saveSign = localStorage.getItem('iboSign');
+  if (saveSign) {
+    document.getElementById('iboSign').value = saveSign;
+  }
+}
+
+// 昵称、个性签名 输入时自动保存
+function bindProfileInputSave() {
+  const nameInput = document.getElementById('iboName');
+  const signInput = document.getElementById('iboSign');
+
+  // 昵称失去焦点自动存
+  nameInput.addEventListener('blur', function(){
+    localStorage.setItem('iboName', this.value.trim());
+  });
+
+  // 个性签名失去焦点自动存
+  signInput.addEventListener('blur', function(){
+    localStorage.setItem('iboSign', this.value.trim());
+  });
+}
+
+// 头像上传并保存base64到本地
+document.getElementById('avatarInput').addEventListener('change', e => {
+  const f = e.target.files[0];
+  if (!f) return;
+  const r = new FileReader();
+  r.onload = function (e) {
+    const base64Img = e.target.result;
+    // 预览赋值
+    document.getElementById('avatarPreview').src = base64Img;
+    // 永久存入本地
+    localStorage.setItem('iboAvatar', base64Img);
+  };
+  r.readAsDataURL(f);
+});
+
+// =============== Yibo News 模块（带音频播放器） ===============
+let currentNewsList = [];
+let bbcAudio = document.getElementById('bbcAudioPlayer');
+let bbcSpeed = 1.0;
+
+// 渲染一级列表页
+function renderBbcNews() {
+  const list = JSON.parse(localStorage.getItem('bbcNewsList') || '[]');
+  currentNewsList = list;
+  const container = document.getElementById('bbcNewsList');
+  let html = '';
+  list.forEach((item, index) => {
+    html += `
+    <div onclick="openBbcDetail(${index})" style="background:var(--bg-card); border-radius:14px; padding:12px 14px;
+                display:flex; align-items:center; justify-content:space-between;
+                box-shadow:0 2px 8px rgba(0,0,0,0.2); position:relative; cursor:pointer;">
+      <div style="flex:1; padding-right:10px;">
+        <div style="font-size:16px; font-weight:bold; color:#00953d; margin-bottom:4px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${item.name}</div>
+        <div style="font-size:12px; color:var(--color-text-secondary);">${item.time}</div>
+      </div>
+      <div style="width:70px; height:70px; border-radius:10px; overflow:hidden; background:#000;flex-shrink:0;">
+        <img src="${item.img}" style="width:100%;height:100%;object-fit:cover;" onerror="this.src='news_1.jpg'">
+      </div>
+      <div class="bbc-del-btn" onclick="event.stopPropagation();deleteBbcNews(${index})"
+           style="position:absolute; top:6px; right:6px; width:20px; height:20px;
+                  border-radius:50%; background:rgba(120,120,120,0.5); color:#fff;
+                  display:grid; place-items:center; font-size:12px; cursor:pointer;
+                  display:none;">×</div>
+    </div>
+    `;
+  });
+  container.innerHTML = html;
+}
+
+// 添加新文章（新增音频地址）
+function addBbcNews() {
+  const name = document.getElementById('bbcArticleName').value.trim();
+  const time = document.getElementById('bbcUpdateTime').value.trim();
+  const img = document.getElementById('bbcImageName').value.trim();
+  const banner = document.getElementById('bbcBannerImage').value.trim();
+  const audio = document.getElementById('bbcAudioSrc').value.trim();
+  const content = document.getElementById('bbcContent').value.trim();
+  
+  if (!name || !time || !img || !banner || !audio || !content) {
+    alert('请填写完整信息（含音频文件地址）');
+    return;
+  }
+  
+  const list = JSON.parse(localStorage.getItem('bbcNewsList') || '[]');
+  list.unshift({ name, time, img, banner, audio, content });
+  localStorage.setItem('bbcNewsList', JSON.stringify(list));
+  renderBbcNews();
+  
+  // 清空表单
+  document.getElementById('bbcArticleName').value = '';
+  document.getElementById('bbcUpdateTime').value = '';
+  document.getElementById('bbcImageName').value = '';
+  document.getElementById('bbcBannerImage').value = '';
+  document.getElementById('bbcAudioSrc').value = '';
+  document.getElementById('bbcContent').value = '';
+}
+
+// 删除文章
+function deleteBbcNews(index) {
+  if (!confirm('确定删除这条 NEWS？')) return;
+  const list = JSON.parse(localStorage.getItem('bbcNewsList') || '[]');
+  list.splice(index, 1);
+  localStorage.setItem('bbcNewsList', JSON.stringify(list));
+  renderBbcNews();
+}
+
+// 打开三级详情页
+function openBbcDetail(index) {
+  const item = currentNewsList[index];
+  
+  // 1. 加载Banner图
+  const bannerImg = document.getElementById('bbcDetailBanner');
+  bannerImg.src = '';
+  bannerImg.src = item.banner;
+  bannerImg.onerror = function() { this.src = 'news_1.jpg'; };
+  
+  // 2. 加载文章内容
+  document.getElementById('bbcDetailTitle').innerText = item.name;
+  document.getElementById('bbcDetailTime').innerText = item.time;
+  document.getElementById('bbcDetailContent').innerText = item.content;
+  
+  // 3. 加载音频
+  bbcAudio.src = item.audio;
+  bbcAudio.load();
+  
+  // 重置播放器状态
+  document.getElementById('bbcPlayBtn').innerText = '▶';
+  document.getElementById('bbcAudioProgress').value = 0;
+  document.getElementById('bbcAudioCurrent').innerText = '00:00';
+  document.getElementById('bbcAudioDuration').innerText = '00:00';
+  
+  showPage('bbcDetailPage');
+}
+
+// 音频播放/暂停控制
+function toggleBbcAudio() {
+  if (bbcAudio.paused) {
+    bbcAudio.play().catch(() => alert('音频加载失败，请检查文件地址'));
+    document.getElementById('bbcPlayBtn').innerText = '❚❚';
+  } else {
+    bbcAudio.pause();
+    document.getElementById('bbcPlayBtn').innerText = '▶';
+  }
+}
+
+// 倍速切换
+function toggleBbcSpeed() {
+  const speeds = [1.0, 1.25, 1.5, 0.75];
+  const idx = speeds.indexOf(bbcSpeed);
+  bbcSpeed = speeds[(idx + 1) % speeds.length];
+  bbcAudio.playbackRate = bbcSpeed;
+  document.getElementById('bbcSpeedBtn').innerText = bbcSpeed + 'x';
+}
+
+// 快进/快退
+function bbcSkip(seconds) {
+  bbcAudio.currentTime += seconds;
+}
+
+// 格式化时间
+function formatTime(sec) {
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+}
+
+// 音频进度条同步
+bbcAudio.addEventListener('loadedmetadata', () => {
+  document.getElementById('bbcAudioDuration').innerText = formatTime(bbcAudio.duration);
+});
+bbcAudio.addEventListener('timeupdate', () => {
+  const percent = (bbcAudio.currentTime / bbcAudio.duration) * 100;
+  document.getElementById('bbcAudioProgress').value = percent;
+  document.getElementById('bbcAudioCurrent').innerText = formatTime(bbcAudio.currentTime);
+});
+bbcAudio.addEventListener('ended', () => {
+  document.getElementById('bbcPlayBtn').innerText = '▶';
+  bbcAudio.currentTime = 0;
+  document.getElementById('bbcAudioProgress').value = 0;
+});
+
+// 进度条拖拽控制
+document.getElementById('bbcAudioProgress').addEventListener('input', function() {
+  const time = (this.value / 100) * bbcAudio.duration;
+  bbcAudio.currentTime = time;
+});
+
+// 返回时停止音频
+function stopBbcAudioAndBack() {
+  bbcAudio.pause();
+  bbcAudio.currentTime = 0;
+  document.getElementById('bbcPlayBtn').innerText = '▶';
+  showPage('bbcPage');
+}
+
+// 管理模式同步
+function syncBbcAdminDisplay() {
+  const bbcForm = document.getElementById('bbcNewsForm');
+  const bbcDels = document.querySelectorAll('.bbc-del-btn');
+  if (adminMode) {
+    bbcForm.style.display = 'block';
+    bbcDels.forEach(el => el.style.display = 'grid');
+  } else {
+    bbcForm.style.display = 'none';
+    bbcDels.forEach(el => el.style.display = 'none');
+  }
+}
+
 </script>
 </body>
 </html>
